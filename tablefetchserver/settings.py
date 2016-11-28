@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'kitchen.apps.KitchenConfig',
+    'djangobower',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -121,8 +122,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_FINDERS = [
+    'djangobower.finders.BowerFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder'
+]
+
+
+# REST Framework
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASS': ('rest_framework.permissions.IsAdminUser',),
     'PAGE_SIZE': 10
 }
+
+
+# Bower
+
+BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
+BOWER_INSTALLED_APPS = (
+    'jquery',
+    'bootstrap#v4.0.0-alpha.5',
+)
+

@@ -7,3 +7,4 @@ MANIFEST
 node_modules/
 *.sqlite3
 components
+*.swp

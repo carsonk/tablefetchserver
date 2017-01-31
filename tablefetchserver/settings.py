@@ -145,3 +145,4 @@ BOWER_INSTALLED_APPS = (
     'bootstrap#v4.0.0-alpha.5',
 )
 
+from .settings_local import *

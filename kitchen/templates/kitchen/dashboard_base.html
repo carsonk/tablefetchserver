@@ -1,0 +1,28 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+<head>
+    <title>TableFetch Kitchen{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+    <div class="dashboard-menu-container">
+        <ul class="dashboard-menu-items">
+            <li>Map</li>
+            <li>Orders</li>
+            <li>Food</li>
+        </ul>
+        <ul class="dashboard-admin-menu">
+            <li>Settings</li>
+        </ul>
+    </div>
+    <div class="body">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

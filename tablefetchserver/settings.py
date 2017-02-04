@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'kitchen.apps.KitchenConfig',
     'djangobower',
     'rest_framework',
+    'sass_processor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -125,8 +126,10 @@ STATIC_URL = '/static/'
 STATICFILES_FINDERS = [
     'djangobower.finders.BowerFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder'
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder'
 ]
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 
 # REST Framework
@@ -144,5 +147,9 @@ BOWER_INSTALLED_APPS = (
     'jquery',
     'bootstrap#v4.0.0-alpha.5',
 )
+
+# Django SASS Processor
+
+SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.scss$'
 
 from .settings_local import *

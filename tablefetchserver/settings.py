@@ -148,7 +148,7 @@ REST_FRAMEWORK = {
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 BOWER_INSTALLED_APPS = (
     'jquery',
-    'bootstrap#v4.0.0-alpha.5',
+    'bootstrap#v4.0.0-alpha.6',
 )
 
 from .settings_local import *

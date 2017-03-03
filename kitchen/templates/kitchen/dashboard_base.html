@@ -4,7 +4,11 @@
 <html>
 <head>
     <title>TableFetch Kitchen{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    
     <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel='stylesheet' type='text/css'>
     <link href="{% sass_src 'common.scss' %}" rel="stylesheet" type="text/css" />
 </head>
@@ -14,6 +18,7 @@
             <li>Map</li>
             <li>Orders</li>
             <li>Food</li>
+            <li>Booty</li>
         </ul>
         <ul class="dashboard-admin-menu">
             <li>Settings</li>
@@ -23,5 +28,9 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'tether/dist/js/tether.min.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}></script>
 </body>
 </html>

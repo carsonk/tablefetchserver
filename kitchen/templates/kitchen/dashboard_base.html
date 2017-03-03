@@ -13,20 +13,34 @@
     <link href="{% sass_src 'common.scss' %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div class="dashboard-menu-container">
-        <ul class="dashboard-menu-items">
-            <li>Map</li>
-            <li>Orders</li>
-            <li>Food</li>
-            <li>Booty</li>
-        </ul>
-        <ul class="dashboard-admin-menu">
-            <li>Settings</li>
-        </ul>
-    </div>
-    <div class="body">
-        {% block content %}
-        {% endblock %}
+    <div class="container-fluid">
+        <div class="row">    
+            <nav class="dashboard-menu-container col-3">
+                <ul class="nav flex-column dashboard-menu">
+                    <li class="nav-item active">
+                        <a href="">Map</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="">Food</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="">Booty</a>
+                    </li>
+                </ul>
+                <ul class="nav flex-column dashboard-menu">
+                    <li>
+                        <a href="">Settings</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="dashboard-body col">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
     </div>
 
     <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>

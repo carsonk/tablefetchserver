@@ -1,10 +1,12 @@
 {% load staticfiles %}
+{% load sass_tags %}
 <!doctype html>
 <html>
 <head>
     <title>TableFetch Kitchen{% block title %}{% endblock %}</title>
 
     <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel='stylesheet' type='text/css'>
+    <link href="{% sass_src 'common.scss' %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="dashboard-menu-container">

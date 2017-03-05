@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sass_processor'
+    'static_precompiler',
 ]
 
 MIDDLEWARE = [
@@ -128,12 +128,20 @@ STATICFILES_FINDERS = [
     'djangobower.finders.BowerFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'sass_processor.finders.CssFinder'
+    'static_precompiler.finders.StaticPrecompilerFinder',
 ]
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
-# Feel free to over
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'out', 'static')
+
+# Static Precompiler
+
+STATIC_PRECOMPILER_COMPILERS = (
+    ("static_precompiler.compilers.SCSS", {
+        "load_paths": STATICFILES_DIRS
+    }),
+)
 
 # REST Framework
 

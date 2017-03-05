@@ -1,5 +1,5 @@
-{% load staticfiles %}
-{% load sass_tags %}
+{% load compile_static %}
+{% load static %}
 <!doctype html>
 <html>
 <head>
@@ -10,13 +10,13 @@
     <link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
     
     <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel='stylesheet' type='text/css'>
-    <link href="{% sass_src 'common.scss' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'common.scss'|compile %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">    
-            <nav class="dashboard-menu-container col-3">
-                <ul class="nav flex-column dashboard-menu">
+            <nav class="sidebar col-3 p-3">
+                <ul class="nav nav-pill flex-column dashboard-menu">
                     <li class="nav-item active">
                         <a href="">Map</a>
                     </li>
@@ -36,7 +36,7 @@
                     </li>
                 </ul>
             </nav>
-            <div class="dashboard-body col">
+            <div class="dashboard-body col p-3">
                 {% block content %}
                 {% endblock %}
             </div>

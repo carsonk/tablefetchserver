@@ -7,7 +7,18 @@ $sidebar-bg: #333;
     top: 0;
     bottom: 0;
     left: 0;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    .nav-link {
+        border-radius: 0;
+    }
 }
 
-
+.order-controls {
+    button {
+        cursor: pointer;
+    }
+}
 

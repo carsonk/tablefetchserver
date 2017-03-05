@@ -1,8 +1,13 @@
 $body-bg: #000000;
-$sidebar-bg: blue;
+$sidebar-bg: #333;
 
-body {
-
-    margin: 0;
-    padding: 0;
+.sidebar {
+    background-color: $sidebar-bg;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
 }
+
+
+

@@ -15,28 +15,28 @@
 <body>
     <div class="container-fluid">
         <div class="row">    
-            <nav class="sidebar col-3 p-3">
-                <ul class="nav nav-pill flex-column dashboard-menu">
-                    <li class="nav-item active">
-                        <a href="">Map</a>
+            <nav class="sidebar col-md-2 col-sm-3 p-3">
+                <ul class="nav nav-pills flex-column dashboard-menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="">Map</a>
                     </li>
                     <li class="nav-item">
-                        <a href="">Orders</a>
+                        <a class="nav-link" href="">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a href="">Food</a>
+                        <a class="nav-link" href="">Food</a>
                     </li>
                     <li class="nav-item">
-                        <a href="">Booty</a>
+                        <a class="nav-link" href="">Booty</a>
                     </li>
                 </ul>
                 <ul class="nav flex-column dashboard-menu">
                     <li>
-                        <a href="">Settings</a>
+                        <a class="nav-link" href="">Settings</a>
                     </li>
                 </ul>
             </nav>
-            <div class="dashboard-body col p-3">
+            <div class="dashboard-body col-md-10 offset-md-2 col-sm-9 p-3">
                 {% block content %}
                 {% endblock %}
             </div>

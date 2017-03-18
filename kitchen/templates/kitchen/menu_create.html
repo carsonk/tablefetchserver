@@ -1,0 +1,26 @@
+{% extends "kitchen/dashboard_base.html" %}
+
+{% block content %}
+
+<h2>New Menu Item</h2>
+
+<br />
+
+<form>
+    <div class="form-group">
+        <label for="menu-form-title">Title</label>
+        <input type="text" class="form-control" id="menu-form-title" placeholder="Enter a title for your new menu item." />
+    </div>
+    <div class="form-group">
+        <label for="menu-form-parent">Category</label>
+        <select class="form-control" name="parent" id="menu-form-parent">
+            <option value="0">None</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="menu-form-description">Description</label>
+        <textarea class="form-control" id="menu-form-description" rows="3"></textarea>
+    </div>
+</form>
+
+{% endblock %}

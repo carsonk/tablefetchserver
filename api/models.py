@@ -38,6 +38,9 @@ class MenuCategory(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField(blank=True)
 
+    def __str__(self):
+        return self.name
+
 class MenuItem(models.Model):
     """ A choosable menu item. """
 
@@ -45,6 +48,9 @@ class MenuItem(models.Model):
 
     name = models.CharField(max_length=256)
     description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Order(models.Model):
     """ Representation of an order.

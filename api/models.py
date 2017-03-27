@@ -34,7 +34,7 @@ class PartyMember(models.Model):
 class MenuCategory(models.Model):
     """ A category for menu items. """
 
-    parent = models.ForeignKey("self", on_delete=models.CASCADE)
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, default=None, null=True, blank=True)
     name = models.CharField(max_length=256)
     description = models.TextField()
 

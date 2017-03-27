@@ -65,3 +65,4 @@ class OrderMenuItem(models.Model):
     menu_item = models.ForeignKey(MenuItem)
 
     comments = models.TextField()
+ 

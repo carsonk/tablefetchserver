@@ -36,15 +36,15 @@ class MenuCategory(models.Model):
 
     parent = models.ForeignKey("self", on_delete=models.CASCADE, default=None, null=True, blank=True)
     name = models.CharField(max_length=256)
-    description = models.TextField()
+    description = models.TextField(blank=True)
 
 class MenuItem(models.Model):
     """ A choosable menu item. """
 
-    category = models.ManyToManyField(MenuCategory)
+    category = models.ManyToManyField(MenuCategory, default=None, blank=True)
 
     name = models.CharField(max_length=256)
-    description = models.TextField()
+    description = models.TextField(blank=True)
 
 class Order(models.Model):
     """ Representation of an order.

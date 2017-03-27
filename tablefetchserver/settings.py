@@ -159,4 +159,8 @@ BOWER_INSTALLED_APPS = (
     'bootstrap#v4.0.0-alpha.6',
 )
 
+# Crispy Forms
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 from .settings_local import *

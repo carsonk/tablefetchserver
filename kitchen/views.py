@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from api.models import MenuItem, MenuCategory
 from kitchen.forms.menu_item import MenuItemForm, MenuCategoryForm
 
 def orders(request):
@@ -15,7 +16,11 @@ def orders_create(request):
     return render(request, "kitchen/orders_create.html", context)
 
 def menu(request):
-    context = { "" }
+    menu_items = []
+
+    menu_items = MenuCategory.objects.all()
+
+    context = { "menu_items": menu_items }
     return render(request, "kitchen/menu.html", context)
 
 def menu_category_create(request):

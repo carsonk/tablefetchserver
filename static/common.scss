@@ -1,6 +1,7 @@
 $body-bg: #000000;
 $sidebar-bg: #333;
 $sidebar-bg-link-hover: #444;
+$hover-trans-time: 200ms;
 
 .sidebar {
     background-color: $sidebar-bg;
@@ -16,7 +17,7 @@ $sidebar-bg-link-hover: #444;
         border-radius: 0;
         color: #FFF;
 
-        transition: background-color 200ms, color 200ms;
+        transition: background-color $hover-trans-time, color $hover-trans-time;
     }
 
     .nav-link:hover {

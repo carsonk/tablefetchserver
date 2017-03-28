@@ -19,13 +19,18 @@ def orders_create(request):
     }
     return render(request, "kitchen/orders_create.html", context)
 
-def menu(request):
-    menu_items = []
+def menu(request, category_id=None):
+    if category_id is None:
+        category = None
+    else:
+        category = MenuCategory.objects.get(pk=category_id)
 
-    menu_items = MenuCategory.objects.all()
+    category_items = MenuCategory.objects.filter(parent=category)
+    menu_items = MenuItem.objects.filter(category=category)
 
     context = {
         "side_active": "menu",
+        "category_items": category_items,
         "menu_items": menu_items
     }
     return render(request, "kitchen/menu.html", context)

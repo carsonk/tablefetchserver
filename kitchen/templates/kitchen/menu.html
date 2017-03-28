@@ -17,8 +17,8 @@
 <br />
 
 <div id="menu-items">
-    {% for item in menu_items %}
-        {% if forloop.counter0|divisibleby:3 or florloop.last %}
+    {% for item in category_items %}
+        {% if forloop.counter0|divisibleby:3 or forloop.last %}
             {% if not forloop.first %}
                 </div>
             {% endif %}
@@ -33,11 +33,27 @@
                 </div>
             </div>
         </div>
-    {% empty %}
-        <div class="alert alert-info">
-            <strong>No items yet!</strong> There are no menu items or categories yet!
+    {% endfor %}
+    {% for item in menu_items %}
+        <div class="row">
+            {% if forloop.counter0|divisibleby:3 or forloop.last %}
+                {% if not forloop.first %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if forloop.counter0|divisibleby:3 %}
+                <div class="row">
+            {% endif %}
+
+            
         </div>
     {% endfor %}
+
+    {% if not menu_items and not category_items %}
+        <div class="alert alert-info">
+            <strong>Nothing here yet!</strong> Create some menu categories and items so that your customers have food to order.
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}

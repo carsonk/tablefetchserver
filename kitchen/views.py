@@ -25,13 +25,22 @@ def menu(request, category_id=None):
     else:
         category = MenuCategory.objects.get(pk=category_id)
 
+    items = []
+
     category_items = MenuCategory.objects.filter(parent=category)
     menu_items = MenuItem.objects.filter(category=category)
+
+    items = []
+    for item in category_items:
+        items.append({ "type": "category", "obj": item })
+    for item in menu_items:
+        items.append({ "type": "item", "obj": item })
 
     context = {
         "side_active": "menu",
         "category_items": category_items,
-        "menu_items": menu_items
+        "menu_items": menu_items,
+        "items": items
     }
     return render(request, "kitchen/menu.html", context)
 

@@ -38,9 +38,8 @@ def menu(request, category_id=None):
 
     context = {
         "side_active": "menu",
-        "category_items": category_items,
-        "menu_items": menu_items,
-        "items": items
+        "items": items,
+        "category": category
     }
     return render(request, "kitchen/menu.html", context)
 

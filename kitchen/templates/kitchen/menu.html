@@ -26,7 +26,7 @@
                     <a href="">
                 {% endif %}
 
-                <div class="card {% if item.type == "category" %}menu-category-card card-inverse{%else%}menu-item-card{%endif%}">
+                <div class="card {% if item.type == "category" %}menu-category-card{%else%}menu-item-card{%endif%}">
                     <div class="card-block">
                         <h4 class="card-title">{{ item.obj.name }}</h4>
                     </div>
@@ -40,14 +40,12 @@
                 </div>
                 <div class="row">
             {% endif %}
+        {% empty %}
+            <div class="alert alert-info">
+                <strong>Nothing here yet!</strong> Create some menu categories and items so that your customers have food to order.
+            </div>
         {% endfor %}
     </div>
-
-    {% if not menu_items and not category_items %}
-        <div class="alert alert-info">
-            <strong>Nothing here yet!</strong> Create some menu categories and items so that your customers have food to order.
-        </div>
-    {% endif %}
 </div>
 
 {% endblock %}

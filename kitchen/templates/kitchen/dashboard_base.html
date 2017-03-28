@@ -18,24 +18,24 @@
             <nav class="sidebar col-md-2 col-sm-3 p-0">
                 <ul class="nav nav-pills flex-column dashboard-menu">
                     <li class="nav-item">
-                        <a class="nav-link active" href="">Map</a>
+                        <a class="nav-link {% if side_active == "map" %}active{% endif %}" href="">Map</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">Orders</a>
+                        <a class="nav-link {% if side_active == "orders" %}active{% endif %}" href="">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'menu' %}">Menu</a>
+                        <a class="nav-link {% if side_active == "menu" %}active{% endif %}" href="{% url 'menu' %}">Menu</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">Food</a>
+                        <a class="nav-link {% if side_active == "food" %}active{% endif %}" href="">Food</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">Booty</a>
+                        <a class="nav-link {% if side_active == "booty" %}active{% endif %}" href="">Booty</a>
                     </li>
                 </ul>
                 <ul class="nav flex-column dashboard-menu">
                     <li>
-                        <a class="nav-link" href="">Settings</a>
+                        <a class="nav-link {% if side_active == "settings" %}active{% endif %}" href="">Settings</a>
                     </li>
                 </ul>
             </nav>

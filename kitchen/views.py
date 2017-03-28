@@ -8,11 +8,15 @@ from api.models import MenuItem, MenuCategory
 from kitchen.forms.menu_item import MenuItemForm, MenuCategoryForm
 
 def orders(request):
-    context = {}
+    context = {
+        "side_active": "orders"
+    }
     return render(request, "kitchen/orders.html", context)
 
 def orders_create(request):
-    context = {}
+    context = {
+        "side_active": "orders"
+    }
     return render(request, "kitchen/orders_create.html", context)
 
 def menu(request):
@@ -20,7 +24,10 @@ def menu(request):
 
     menu_items = MenuCategory.objects.all()
 
-    context = { "menu_items": menu_items }
+    context = {
+        "side_active": "menu",
+        "menu_items": menu_items
+    }
     return render(request, "kitchen/menu.html", context)
 
 def menu_category_create(request):
@@ -33,7 +40,11 @@ def menu_category_create(request):
             form.save()
             form = MenuCategoryForm()
 
-    context = { "success": success, "form": form }
+    context = {
+        "side_active": "menu",
+        "success": success,
+        "form": form
+    }
     return render(request, "kitchen/menu_category_create.html", context)
 
 def menu_create(request):
@@ -46,6 +57,10 @@ def menu_create(request):
             form.save()
             form = MenuItemForm()
 
-    context = { "success": success, "form": form }
+    context = {
+        "side_active": "menu",
+        "success": success,
+        "form": form
+    }
     return render(request, "kitchen/menu_create.html", context)
 

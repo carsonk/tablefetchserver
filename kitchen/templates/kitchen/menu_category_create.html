@@ -8,6 +8,12 @@
 
 <br />
 
+{% if success %}
+    <div class="alert alert-success" role="alert">
+        <strong>Awesome!</strong> Your new category was created.
+    </div>
+{% endif %}
+
 {% csrf_token %}
 
 {% crispy form %}

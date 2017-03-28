@@ -16,16 +16,16 @@
 
 <br />
 
-<div class="container">
-{% for item in menu_items %}
-    {% if forloop.counter0|divisibleby:4 or florloop.last %}
-        {% if not forloop.first %}
-            </div>
+<div id="menu-items">
+    {% for item in menu_items %}
+        {% if forloop.counter0|divisibleby:3 or florloop.last %}
+            {% if not forloop.first %}
+                </div>
+            {% endif %}
         {% endif %}
-    {% endif %}
-    {% if forloop.counter0|divisibleby:4 %}
-        <div class="row">
-    {% endif %}
+        {% if forloop.counter0|divisibleby:3 %}
+            <div class="row">
+        {% endif %}
         <div class="col-md-4">
             <div class="card">
                 <div class="card-block">
@@ -33,11 +33,11 @@
                 </div>
             </div>
         </div>
-{% empty %}
-    <div class="alert alert-info">
-        <strong>No items yet!</strong> There are no menu items or categories yet!
-    </div>
-{% endfor %}
+    {% empty %}
+        <div class="alert alert-info">
+            <strong>No items yet!</strong> There are no menu items or categories yet!
+        </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

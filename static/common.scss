@@ -22,3 +22,9 @@ $sidebar-bg: #333;
     }
 }
 
+#menu-items {
+    .row:not(:first-child) {
+        margin-top: 30px;
+    }
+}
+

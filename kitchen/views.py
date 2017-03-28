@@ -20,12 +20,18 @@ def orders_create(request):
     return render(request, "kitchen/orders_create.html", context)
 
 def menu(request, category_id=None):
+    breadcrumbs = []
+
     if category_id is None:
         category = None
     else:
         category = MenuCategory.objects.get(pk=category_id)
+        breadcrumbs.append(category)
 
-    items = []
+        parent = category.parent
+        while parent is not None:
+            breadcrumbs.append(parent)
+            parent = parent.parent
 
     category_items = MenuCategory.objects.filter(parent=category)
     menu_items = MenuItem.objects.filter(category=category)
@@ -39,7 +45,8 @@ def menu(request, category_id=None):
     context = {
         "side_active": "menu",
         "items": items,
-        "category": category
+        "category": category,
+        "breadcrumbs": breadcrumbs
     }
     return render(request, "kitchen/menu.html", context)
 

@@ -12,6 +12,15 @@
             <a class="dropdown-item" href="{% url 'menu_create' %}">Item</a>
         </div>
     </div>
+
+    {% if category %}
+        <div class="menu-breadcrumbs btn-group" role="group" aria-label="Category breadcrumbs">
+            <a class="btn btn-outline-secondary" href="{% url 'menu' %}">Menu</a>
+            {% for bcat in breadcrumbs %}
+                <a class="btn {% if forloop.last %}btn-secondary{%else%}btn-outline-secondary{%endif%}" href="{% url "menu" bcat.id %}">{{bcat.name}}</a>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>
 
 <br />

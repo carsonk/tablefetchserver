@@ -9,6 +9,10 @@ body {
     background-color: $body-bg;
 }
 
+button {
+    cursor: pointer;
+}
+
 .sidebar {
     background-color: $sidebar-bg;
     position: fixed;
@@ -37,8 +41,11 @@ body {
 }
 
 .order-controls {
-    button {
-        cursor: pointer;
+}
+
+.menu-controls {
+    .menu-breadcrumbs {
+        margin-left: 10px;
     }
 }
 

@@ -1,5 +1,6 @@
 $body-bg: #000000;
 $sidebar-bg: #333;
+$sidebar-bg-link-hover: #444;
 
 .sidebar {
     background-color: $sidebar-bg;
@@ -13,6 +14,18 @@ $sidebar-bg: #333;
 
     .nav-link {
         border-radius: 0;
+        color: #FFF;
+
+        transition: background-color 200ms, color 200ms;
+    }
+
+    .nav-link:hover {
+        cursor: pointer;
+    }
+
+    .nav-link:not(.active):hover {
+        color: #CCC;
+        background-color: $sidebar-bg-link-hover;
     }
 }
 

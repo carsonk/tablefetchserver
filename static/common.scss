@@ -3,6 +3,8 @@ $sidebar-bg: #333;
 $sidebar-bg-link-hover: #444;
 $hover-trans-time: 200ms;
 
+$dark-bg-color: #333;
+
 .sidebar {
     background-color: $sidebar-bg;
     position: fixed;
@@ -37,8 +39,31 @@ $hover-trans-time: 200ms;
 }
 
 #menu-items {
-    .row:not(:first-child) {
-        margin-top: 30px;
+    .menu-item-container {
+        padding: 10px;
+
+        h4 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .menu-category-card, .menu-item-card {
+            transition: background-color $hover-trans-time, border-color $hover-trans-time;
+        }
+
+        .menu-category-card {
+            background-color: $dark-bg-color;
+            border-color: $dark-bg-color;
+        }
+
+        .menu-category-card:hover {
+            background-color: darken($dark-bg-color, 20%);
+            border-color: darken($dark-bg-color, 20%);
+        }
     }
 }
 

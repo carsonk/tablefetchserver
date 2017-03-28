@@ -19,14 +19,23 @@
 <div id="menu-items">
     <div class="row">
         {% for item in items  %}
-            <div class="col-md-3 col-sm-4">
-                <div class="card{% if item.type == "category" %} card-inverse card-primary{%endif%}">
+            <div class="col-md-3 col-sm-4 menu-item-container">
+                {% if item.type == "category" %}
+                    <a href="{% url "menu" item.obj.id %}">
+                {% else %}
+                    <a href="">
+                {% endif %}
+
+                <div class="card {% if item.type == "category" %}menu-category-card card-inverse{%else%}menu-item-card{%endif%}">
                     <div class="card-block">
                         <h4 class="card-title">{{ item.obj.name }}</h4>
                     </div>
                 </div>
-            </div>
 
+                {% if item.type == "category" %}
+                    </a>
+                {% endif %}
+            </div>
             {% if forloop.counter|divisibleby:4 %}
                 </div>
                 <div class="row">

@@ -17,37 +17,39 @@
 <br />
 
 <div id="menu-items">
-    {% for item in category_items %}
-        {% if forloop.counter0|divisibleby:3 or forloop.last %}
-            {% if not forloop.first %}
-                </div>
-            {% endif %}
-        {% endif %}
-        {% if forloop.counter0|divisibleby:3 %}
-            <div class="row">
-        {% endif %}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-block">
-                    <h4 class="card-title">{{ item.name }}</h4>
+    <div class="row">
+        {% for item in category_items %}
+            <div class="col-md-3 col-sm-4">
+                <div class="card card-inverse card-primary">
+                    <div class="card-block">
+                        <h4 class="card-title">{{ item.name }}</h4>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
-    {% for item in menu_items %}
-        <div class="row">
-            {% if forloop.counter0|divisibleby:3 or forloop.last %}
-                {% if not forloop.first %}
-                    </div>
-                {% endif %}
-            {% endif %}
-            {% if forloop.counter0|divisibleby:3 %}
+
+            {% if forloop.counter|divisibleby:4 %}
+                </div>
                 <div class="row">
             {% endif %}
+        {% endfor %}
+    </div>
 
-            
-        </div>
-    {% endfor %}
+    <div class="row">
+        {% for item in menu_items %}
+            <div class="col-md-3 col-sm-4">
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title">{{ item.name }}</h4>
+                    </div>
+                </div>
+            </div>
+
+            {% if forloop.counter|divisibleby:4 %}
+                </div>
+                <div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
 
     {% if not menu_items and not category_items %}
         <div class="alert alert-info">

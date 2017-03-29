@@ -40,10 +40,24 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = MenuCategorySerializer
     permission_classes = [permissions.AllowAny]
 
+    def get_queryset(self):
+        queryset = MenuCategory.objects.all()
+        category_id = self.request.query_params.get('parent', None)
+        if category_id is not None:
+            queryset = queryset.filter(parent__id=category_id)
+        return queryset
+
 class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = MenuItem.objects.all()
+        category_id = self.request.query_params.get('category', None)
+        if category_id is not None:
+            queryset = queryset.filter(category__id=category_id)
+        return queryset
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()

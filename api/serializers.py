@@ -5,44 +5,44 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups')
+        fields = ('id', 'username', 'email', 'groups')
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
-        fields = ('url', 'name')
+        fields = ('id', 'url', 'name')
 
 class TableMapSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TableMap
-        fields = ('name')
+        fields = ('id', 'name')
 
 class TableSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Table
-        fields = ('num_seats', 'x_coord', 'y_coord', 'width', 'height', 'color')
+        fields = ('id', 'num_seats', 'x_coord', 'y_coord', 'width', 'height', 'color')
 
 class PartySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Party
-        fields = ('table', 'size', 'time_arrived', 'time_seated', 'time_paid')
+        fields = ('id', 'table', 'size', 'time_arrived', 'time_seated', 'time_paid')
 
 class PartyMemberSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PartyMember
-        fields = ('party')
+        fields = ('id', 'party')
 
 class MenuCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MenuCategory
-        fields = ('parent', 'name', 'description')
+        fields = ('id', 'parent', 'name', 'description')
 
 class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MenuItem
-        fields = ('category', 'name', 'description')
+        fields = ('id', 'category', 'name', 'description')
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Order
-        fields = ('party', 'party_member', 'menu_items')
+        fields = ('id', 'party', 'party_member', 'menu_items')

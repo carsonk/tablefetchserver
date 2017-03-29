@@ -13,6 +13,9 @@ button {
     cursor: pointer;
 }
 
+
+// Bootstrap v4 changes
+
 .sidebar {
     background-color: $sidebar-bg;
     position: fixed;
@@ -43,6 +46,20 @@ button {
 .order-controls {
 }
 
+.orders-list {
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flew-flow: row wrap;
+    list-style: none;
+
+    padding: 0;
+    margin: 10px 0 10px 0;
+
+    .order {
+        margin: 0 10px 10px 0;
+    }
+} 
+
 .menu-controls {
     .menu-breadcrumbs {
         margin-left: 10px;
@@ -54,12 +71,12 @@ button {
 
     .menu-item-container {
         padding: 5px;
-        text-align: center;
 
         h4 {
             overflow: hidden;
             text-overflow: ellipsis;
             line-height: 1.3;
+            color: #666;
         }
 
         a {
@@ -75,7 +92,7 @@ button {
         }
 
         .menu-category-card:hover, .menu-item-card:hover {
-            background-color: darken(#FFF, 2%);
+            background-color: darken(#FFF, 4%);
         }
     }
 }

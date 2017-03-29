@@ -2,8 +2,13 @@
 
 {% block content %}
 
-<div class="card-columns orders-list">
-    <div class="card order" id="order-499394">
+<div class="order-controls">
+    <a href="{% url 'orders_create' %}" class="btn btn-primary">New Order</a>
+</div>
+
+<ol class="orders-list">
+    {% for i in "xxxxx" %}
+    <li class="card order" id="order-499394">
         <div class="card-block order-body">
             <h5 class="card-title">499394</h5>
             <div class="card-text">
@@ -24,7 +29,8 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </ul>
+    {% endfor %}
+</ol>
 
 {% endblock %}

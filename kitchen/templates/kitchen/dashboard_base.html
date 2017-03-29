@@ -21,7 +21,7 @@
                         <a class="nav-link {% if side_active == "map" %}active{% endif %}" href="">Map</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if side_active == "orders" %}active{% endif %}" href="">Orders</a>
+                        <a class="nav-link {% if side_active == "orders" %}active{% endif %}" href="{% url 'orders' %}">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if side_active == "menu" %}active{% endif %}" href="{% url 'menu' %}">Menu</a>

@@ -1,13 +1,81 @@
 {% extends "kitchen/dashboard_base.html" %}
 
+{% load static %}
+
 {% block content %}
 
-<form>
+<h3>New Order</h3>
+
+<form id="create-order-form" class="card" method="post">
     <div class="form-group">
-        <label for="menu-create-title>Item Name</label>
-        <input type="text" name="name" id="menu-create-title" value="" placeholder="Enter a short title for your item" class="form-control" />
+        <label>Party</label>
+        <select name="party" class="form-control">
+            <option value="0">New party</option>
+        </select>
     </div>
 
+    <div class="form-group">
+        <label>Party Member</label>
+        <div class="party-member-container">
+            <span id="party-member-list" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                    <input type="radio" name="party_member" autocomplete="off" /> <span class="party-member-label">1</span>
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="party_member" autocomplete="off" /> <span class="party-member-label">2</span>
+                </label>
+            </span>
+            <a href="#" id="add-party-member" class="btn btn-outline-success" aria-label="Add new member">+</a>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Choose items</label>
+        <div class="order-select-items">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" name="submit" value="Submit" />
+    </div>
 </form>
 
+
 {% endblock %}
+
+{% block scripts %}
+
+<script>
+
+var api_categories_url = "{% url "menucategory-list" %}";
+var api_items_url = "{% url "menuitem-list" %}";
+
+var current_party_index = 2;
+
+function addPartyMember() {
+    var elem = $(".party-member-container label").first().clone();
+    elem.children(".party-member-label").replaceWith(++current_party_index);
+
+    $("#party-member-list").append(" ");
+    elem.appendTo("#party-member-list");
+}
+
+function getMenuItems(category_id) {
+    var url = (category_id > 0) ? (api_items_url + category_id + "/") : api_items_url;
+
+    $.get(url, function(data) {
+        console.log("retrieved data:");
+        console.log(data);
+    }, "json");
+}
+
+$(function() {
+    jqueryAjaxSetup();
+
+    $("#add-party-member").click(addPartyMember);
+});
+
+</script>
+
+{% endblock %}
+

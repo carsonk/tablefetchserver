@@ -146,8 +146,8 @@ STATIC_PRECOMPILER_COMPILERS = (
 # REST Framework
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASS': ('rest_framework.permissions.IsAdminUser',),
-    'PAGE_SIZE': 10
+    'DEFAULT_PERMISSION_CLASS': ('rest_framework.permissions.SessionAuthentication',),
+    'PAGE_SIZE': 20 
 }
 
 

@@ -119,13 +119,14 @@ button {
             padding: 0;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around;
+            justify-content: flex-start;
 
             li {
                 padding: 10px 25px;
-                margin-bottom: 10px;
+                margin: 0 5px 5px 0;
                 cursor: pointer;
                 transition: background-color $hover-trans-time;
+                color: #555;
             }
 
             .menu-select-category {
@@ -138,7 +139,7 @@ button {
             }
 
             .menu-select-item {
-                border: solid 1px #333;
+                border: solid 1px #AAA;
             }
 
             .menu-select-item:hover {

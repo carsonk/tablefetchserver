@@ -67,10 +67,14 @@
 
 <script>
 
-var api_categories_url = "{% url "menucategory-list" %}";
-var api_items_url = "{% url "menuitem-list" %}";
+var apiCategoriesUrl = "{% url "menucategory-list" %}";
+var apiItemsUrl = "{% url "menuitem-list" %}";
 
 var current_party_index = 2;
+
+
+var menuWidget = new MenuSelectWidgetManager(
+        apiCategoriesUrl, apiItemsUrl);
 
 function addPartyMember() {
     var elem = $(".party-member-container label").first().clone();
@@ -80,104 +84,16 @@ function addPartyMember() {
     elem.appendTo("#party-member-list");
 }
 
-function getCategoryList(category_id, container, callback) {
-    var data = (category_id > 0) ? {"category": category_id} : {};
-
-    $.get(api_items_url, data, function(data) {
-        var menuItems = data.results;
-        data = (category_id > 0) ? {"parent": category_id} : {};
-
-        $.get(api_categories_url, data, function(data) {
-            var menuCategories = data.results;
-
-            callback(container, menuItems, menuCategories);
-        });
-    }, "json");
-}
-
-function loadMenu(container, menuItems, menuCategories) {
-    var catTpl = $(".tpl-menu-select-category li").first().clone();
-    var itemTpl = $(".tpl-menu-select-item li").first().clone();
-
-    container.html("");
-
-    menuCategories.forEach(function(category) {
-        var currentTpl = catTpl.clone();
-
-        currentTpl.data("category", category.id);
-        currentTpl.text(category.name);
-        container.append(currentTpl);
-    });
-
-    menuItems.forEach(function(item) {
-        var currentTpl = itemTpl.clone();
-
-        currentTpl.data("item", item.id);
-        currentTpl.text(item.name);
-        container.append(currentTpl);
-    });
-}
-
-function pushCategoryBreadcrumb(container, categoryId, categoryName) {
-    var template = $(".tpl-order-select-breadcrumb").children("li").clone();
-    console.log("Pushing breadcrumb: " + categoryName);
-    template.data("category", categoryId);
-    template.children("a").text(categoryName);
-    console.log(template.html());
-    container.append(template);
-}
-
-function popCategoryBreadcrumb(container) {
-    container.children().last().remove();
-}
-
-function gotoCategoryBreadcrumb(container, categoryId) {
-    var found = false;
-
-    while(!found) {
-        var elem = container.children().last();
-
-        if (!elem)
-            break;
-
-        if (elem.data("category") == categoryId) {
-            found = true;
-        } else {
-            elem.remove();
-        }
-    }
-}
-
 $(function() {
     jqueryAjaxSetup();
 
     $("#add-party-member").click(addPartyMember);
 
-    // Listen for clicks when categories are selected.
-    $(".menu-select-list").on('click', '.menu-select-category', function(e) {
-        var elem = $(this);
-        var categoryId = elem.data("category");
-        var selectList = elem.parent(".menu-select-list");
-        var breadcrumbs = selectList.parent(".order-select-items").children(".order-select-breadcrumbs");
-        var categoryName = elem.text();
-
-        pushCategoryBreadcrumb(breadcrumbs, categoryId, categoryName);
-        getCategoryList(categoryId, selectList, loadMenu);
-    });
-
-    $(".order-select-breadcrumbs").on('click', 'li', function(e) {
-        var elem = $(this);
-        var breadcrumbs = elem.parent(".order-select-breadcrumbs");
-        var selectList = breadcrumbs.parent().children(".menu-select-list");
-        var categoryId = elem.data("category");
-
-        getCategoryList(categoryId, selectList, loadMenu);
-        gotoCategoryBreadcrumb(breadcrumbs, categoryId);
-    });
+    menuWidget.initListeners();
 
     // Initially load menu inside of all menu-select-list elements.
-    getCategoryList(0, $(".menu-select-list"), loadMenu);
-    pushCategoryBreadcrumb($(".order-select-breadcrumbs"), 0, "Menu");
+    menuWidget.getCategoryList(0, $(".menu-select-list"), menuWidget.loadMenu);
+    menuWidget.pushCategoryBreadcrumb($(".order-select-breadcrumbs"), 0, "Menu");
 });
 
 </script>

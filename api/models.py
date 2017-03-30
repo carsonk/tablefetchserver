@@ -41,10 +41,23 @@ class MenuCategory(models.Model):
     def __str__(self):
         return self.name
 
+class MenuIngredient(models.Model):
+    """ An ingredient on a menu item. (e.g. bread on a sandwhich) """
+
+    name = models.CharField(max_length=256)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
 class MenuItem(models.Model):
     """ A choosable menu item. """
 
     category = models.ManyToManyField(MenuCategory, default=None, blank=True)
+    default_ingredients = models.ManyToManyField(MenuIngredient,
+        related_name='default_on', blank=True)
+    possible_ingredients = models.ManyToManyField(MenuIngredient,
+        related_name='possible_on', blank=True)
 
     name = models.CharField(max_length=256)
     description = models.TextField(blank=True)
@@ -70,5 +83,10 @@ class OrderMenuItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem)
 
+    add_ingredients = models.ManyToManyField(MenuIngredient,
+            related_name='added_to', default=None, blank=True)
+    remove_ingredient = models.ManyToManyField(MenuIngredient,
+            related_name='removed_from', default=None, blank=True)
+
     comments = models.TextField()
- 
+

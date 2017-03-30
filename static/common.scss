@@ -58,7 +58,7 @@ button {
     .order {
         margin: 0 10px 10px 0;
     }
-} 
+}
 
 .menu-controls {
     .menu-breadcrumbs {
@@ -113,6 +113,19 @@ button {
     }
 
     .order-select-items {
+        padding-left: 15px;
+
+        .order-select-breadcrumbs {
+            list-style: none;
+            padding: 0;
+
+            li {
+                display: inline-block;
+                padding: 6px 9px;
+                cursor: pointer;
+            }
+        }
+
         .menu-select-list {
             list-style: none;
             list-style-position: outside;
@@ -127,6 +140,7 @@ button {
                 cursor: pointer;
                 transition: background-color $hover-trans-time;
                 color: #555;
+                border-radius: .25rem;
             }
 
             .menu-select-category {

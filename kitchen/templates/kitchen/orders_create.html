@@ -32,6 +32,8 @@
     <div class="form-group">
         <label>Choose items</label>
         <div class="order-select-items">
+            <ol class="order-select-breadcrumbs btn-group">
+            </ol>
             <ul class="menu-select-list">
             </ul>
         </div>
@@ -53,6 +55,10 @@
 
 <ul class="tpl-menu-select-item">
     <li class="menu-select-item" data-item=""></li>
+</ul>
+
+<ul class="tpl-order-select-breadcrumb">
+    <li class="btn btn-secondary"><a></a></li>
 </ul>
 
 {% endblock %}
@@ -98,20 +104,48 @@ function loadMenu(container, menuItems, menuCategories) {
     menuCategories.forEach(function(category) {
         var currentTpl = catTpl.clone();
 
-        console.debug(category);
         currentTpl.data("category", category.id);
         currentTpl.text(category.name);
         container.append(currentTpl);
     });
-    
+
     menuItems.forEach(function(item) {
         var currentTpl = itemTpl.clone();
 
-        console.debug(item);
         currentTpl.data("item", item.id);
         currentTpl.text(item.name);
         container.append(currentTpl);
     });
+}
+
+function pushCategoryBreadcrumb(container, categoryId, categoryName) {
+    var template = $(".tpl-order-select-breadcrumb").children("li").clone();
+    console.log("Pushing breadcrumb: " + categoryName);
+    template.data("category", categoryId);
+    template.children("a").text(categoryName);
+    console.log(template.html());
+    container.append(template);
+}
+
+function popCategoryBreadcrumb(container) {
+    container.children().last().remove();
+}
+
+function gotoCategoryBreadcrumb(container, categoryId) {
+    var found = false;
+
+    while(!found) {
+        var elem = container.children().last();
+
+        if (!elem)
+            break;
+
+        if (elem.data("category") == categoryId) {
+            found = true;
+        } else {
+            elem.remove();
+        }
+    }
 }
 
 $(function() {
@@ -124,12 +158,26 @@ $(function() {
         var elem = $(this);
         var categoryId = elem.data("category");
         var selectList = elem.parent(".menu-select-list");
+        var breadcrumbs = selectList.parent(".order-select-items").children(".order-select-breadcrumbs");
+        var categoryName = elem.text();
 
+        pushCategoryBreadcrumb(breadcrumbs, categoryId, categoryName);
         getCategoryList(categoryId, selectList, loadMenu);
+    });
+
+    $(".order-select-breadcrumbs").on('click', 'li', function(e) {
+        var elem = $(this);
+        var breadcrumbs = elem.parent(".order-select-breadcrumbs");
+        var selectList = breadcrumbs.parent().children(".menu-select-list");
+        var categoryId = elem.data("category");
+        
+        getCategoryList(categoryId, selectList, loadMenu);
+        gotoCategoryBreadcrumb(breadcrumbs, categoryId);
     });
 
     // Initially load menu inside of all menu-select-list elements.
     getCategoryList(0, $(".menu-select-list"), loadMenu);
+    pushCategoryBreadcrumb($(".order-select-breadcrumbs"), 0, "Menu");
 });
 
 </script>

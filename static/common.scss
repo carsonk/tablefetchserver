@@ -111,5 +111,40 @@ button {
             padding: 20px 25px;
         }
     }
+
+    .order-select-items {
+        .menu-select-list {
+            list-style: none;
+            list-style-position: outside;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+
+            li {
+                padding: 10px 25px;
+                margin-bottom: 10px;
+                cursor: pointer;
+                transition: background-color $hover-trans-time;
+            }
+
+            .menu-select-category {
+                border: solid 1px #AAA;
+                background-color: #EEE;
+            }
+
+            .menu-select-category:hover {
+                background-color: darken(#EEE, 5%);
+            }
+
+            .menu-select-item {
+                border: solid 1px #333;
+            }
+
+            .menu-select-item:hover {
+                background-color: darken(#FFF, 5%);
+            }
+        }
+    }
 }
 

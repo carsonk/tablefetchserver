@@ -10,7 +10,7 @@
     <div class="form-group">
         <label>Party</label>
         <select name="party" class="form-control">
-            <option value="0">New party</option>
+            <option value="0">New Party</option>
         </select>
     </div>
 
@@ -25,13 +25,15 @@
                     <input type="radio" name="party_member" autocomplete="off" /> <span class="party-member-label">2</span>
                 </label>
             </span>
-            <a href="#" id="add-party-member" class="btn btn-outline-success" aria-label="Add new member">+</a>
+            <a id="add-party-member" class="btn btn-outline-success" aria-label="Add new member">+</a>
         </div>
     </div>
 
     <div class="form-group">
         <label>Choose items</label>
         <div class="order-select-items">
+            <ul class="menu-select-list">
+            </ul>
         </div>
     </div>
 
@@ -40,6 +42,18 @@
     </div>
 </form>
 
+
+{% endblock %}
+
+{% block templates %}
+
+<ul class="tpl-menu-select-category">
+    <li class="menu-select-category" data-category=""></li>
+</ul>
+
+<ul class="tpl-menu-select-item">
+    <li class="menu-select-item" data-item=""></li>
+</ul>
 
 {% endblock %}
 
@@ -60,19 +74,62 @@ function addPartyMember() {
     elem.appendTo("#party-member-list");
 }
 
-function getMenuItems(category_id) {
-    var url = (category_id > 0) ? (api_items_url + category_id + "/") : api_items_url;
+function getCategoryList(category_id, container, callback) {
+    var data = (category_id > 0) ? {"category": category_id} : {};
 
-    $.get(url, function(data) {
-        console.log("retrieved data:");
-        console.log(data);
+    $.get(api_items_url, data, function(data) {
+        var menuItems = data.results;
+        data = (category_id > 0) ? {"parent": category_id} : {};
+
+        $.get(api_categories_url, data, function(data) {
+            var menuCategories = data.results;
+
+            callback(container, menuItems, menuCategories);
+        });
     }, "json");
+}
+
+function loadMenu(container, menuItems, menuCategories) {
+    var catTpl = $(".tpl-menu-select-category li").first().clone();
+    var itemTpl = $(".tpl-menu-select-item li").first().clone();
+
+    container.html("");
+
+    menuCategories.forEach(function(category) {
+        var currentTpl = catTpl.clone();
+
+        console.debug(category);
+        currentTpl.data("category", category.id);
+        currentTpl.text(category.name);
+        container.append(currentTpl);
+    });
+    
+    menuItems.forEach(function(item) {
+        var currentTpl = itemTpl.clone();
+
+        console.debug(item);
+        currentTpl.data("item", item.id);
+        currentTpl.text(item.name);
+        container.append(currentTpl);
+    });
 }
 
 $(function() {
     jqueryAjaxSetup();
 
     $("#add-party-member").click(addPartyMember);
+
+    // Listen for clicks when categories are selected.
+    $(".menu-select-list").on('click', '.menu-select-category', function(e) {
+        var elem = $(this);
+        var categoryId = elem.data("category");
+        var selectList = elem.parent(".menu-select-list");
+
+        getCategoryList(categoryId, selectList, loadMenu);
+    });
+
+    // Initially load menu inside of all menu-select-list elements.
+    getCategoryList(0, $(".menu-select-list"), loadMenu);
 });
 
 </script>

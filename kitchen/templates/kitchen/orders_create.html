@@ -170,7 +170,7 @@ $(function() {
         var breadcrumbs = elem.parent(".order-select-breadcrumbs");
         var selectList = breadcrumbs.parent().children(".menu-select-list");
         var categoryId = elem.data("category");
-        
+
         getCategoryList(categoryId, selectList, loadMenu);
         gotoCategoryBreadcrumb(breadcrumbs, categoryId);
     });

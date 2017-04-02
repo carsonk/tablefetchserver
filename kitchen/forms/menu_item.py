@@ -7,7 +7,7 @@ from api.models import MenuItem, MenuCategory
 class MenuItemForm(ModelForm):
     class Meta:
         model = MenuItem
-        fields = ['category', 'name', 'description']
+        fields = ['category', 'name', 'description', 'price']
 
     def __init__(self, *args, **kwargs):
         super(MenuItemForm, self).__init__(*args, **kwargs)

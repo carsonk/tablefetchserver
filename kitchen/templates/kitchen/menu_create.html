@@ -4,7 +4,11 @@
 
 {% block content %}
 
-<h3>New Menu Item</h3>
+{% if item %}
+    <h3>Editing Item: {{ item.name }}</h3>
+{% else %}
+    <h3>New Menu Item</h3>
+{% endif %}
 
 <br />
 

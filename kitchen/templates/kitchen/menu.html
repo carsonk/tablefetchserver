@@ -32,7 +32,7 @@
                 {% if item.type == "category" %}
                     <a href="{% url "menu" item.obj.id %}">
                 {% else %}
-                    <a href="">
+                    <a href="{% url "menu_edit" item.obj.id %}">
                 {% endif %}
 
                 <div class="card {% if item.type == "category" %}menu-category-card{%else%}menu-item-card{%endif%}">

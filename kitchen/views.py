@@ -1,5 +1,5 @@
 from crispy_forms.helper import FormHelper
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -50,9 +50,19 @@ def menu(request, category_id=None):
     }
     return render(request, "kitchen/menu.html", context)
 
-def menu_category_create(request):
+def menu_category_create(request, edit=None):
     success = False
-    form = MenuCategoryForm(request.POST or None)
+    category = None
+
+    if edit is None:
+        form = MenuCategoryForm(request.POST or None)
+    else:
+        category = get_object_or_404(MenuCategory, pk=edit)
+
+        if request.POST:
+            form = MenuCategoryForm(request.POST)
+        else:
+            form = MenuCategoryForm(instance=category)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -61,15 +71,26 @@ def menu_category_create(request):
             form = MenuCategoryForm()
 
     context = {
+        "category": category,
         "side_active": "menu",
         "success": success,
         "form": form
     }
     return render(request, "kitchen/menu_category_create.html", context)
 
-def menu_create(request):
+def menu_create(request, edit=None):
     success = False
-    form = MenuItemForm(request.POST or None)
+    item = None
+
+    if edit is None:
+        form = MenuItemForm(request.POST or None)
+    else:
+        item = get_object_or_404(MenuItem, pk=edit)
+
+        if request.POST:
+            form = MenuItemForm(request.POST)
+        else:
+            form = MenuItemForm(instance=item)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -78,6 +99,7 @@ def menu_create(request):
             form = MenuItemForm()
 
     context = {
+        "item": item,
         "side_active": "menu",
         "success": success,
         "form": form

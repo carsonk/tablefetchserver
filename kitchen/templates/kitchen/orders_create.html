@@ -36,6 +36,8 @@
             </ol>
             <ul class="menu-select-list">
             </ul>
+            <ul class="order-selected-items">
+            </ul>
         </div>
     </div>
 
@@ -59,6 +61,30 @@
 
 <ul class="tpl-order-select-breadcrumb">
     <li class="btn btn-secondary"><a></a></li>
+</ul>
+
+<ul class="tpl-order-selected-item">
+    <li>
+        <div class="order-selected-body clearfix">
+            <div class="selected-tools btn-group float-right">
+                <button class="select-quantity-dec btn btn-danger" aria-label="Add ingredient">-</button>
+                <button class="selected-quantity btn btn-secondary" aria-label="Quantity" data-quantity="1">1</button>
+                <input type="hidden" name="quantity" value="1" />
+                <button class="select-quantity-inc btn btn-success" aria-label="Remove ingredient">+</button>
+            </div>
+            <h4 class="selected-title float-left"></h4>
+        </div>
+        <ul class="order-selected-ingredients"></ul>
+        <div class="order-selected-footer clearfix">
+            <span class="order-selected-price"></span>
+            <button class="ingredients-btn btn btn-primary">Ingredients</button>
+        </div>
+    </li>
+</ul>
+
+<ul class="tpl-order-selected-ingredient">
+    <li class="order-selected-add"><span class="order-action">ADD</span></li>
+    <li class="order-selected-remove"><span class="order-action">NO</span></li>
 </ul>
 
 {% endblock %}

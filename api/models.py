@@ -86,7 +86,7 @@ class OrderMenuItem(models.Model):
 
     add_ingredients = models.ManyToManyField(MenuIngredient,
             related_name='added_to', default=None, blank=True)
-    remove_ingredient = models.ManyToManyField(MenuIngredient,
+    remove_ingredients = models.ManyToManyField(MenuIngredient,
             related_name='removed_from', default=None, blank=True)
 
     comments = models.TextField()

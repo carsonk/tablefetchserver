@@ -40,9 +40,15 @@ class MenuCategorySerializer(serializers.HyperlinkedModelSerializer):
 class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MenuItem
-        fields = ('id', 'category', 'name', 'description', 'price')
+        fields = ('id', 'category', 'name', 'description', 'price', 'default_ingredients', 'possible_ingredients')
+
+class MenuIngredientSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = MenuIngredient
+        fields = ('name', 'description')
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Order
-        fields = ('id', 'party', 'party_member', 'menu_items')
+        fields = ('id', 'party', 'party_member', 'menu_items', 'add_ingredients', 'remove_ingredients')
+

@@ -25,6 +25,10 @@ class MenuCategoryAdmin(admin.ModelAdmin):
 class MenuItemAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(MenuIngredient)
+class MenuIngredientAdmin(admin.ModelAdmin):
+    pass
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     pass

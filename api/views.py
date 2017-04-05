@@ -59,8 +59,13 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(category__id=category_id)
         return queryset
 
+class MenuIngredientViewSet(viewsets.ModelViewSet):
+    queryset = MenuIngredient
+    serializer_class = MenuIngredientSerializer
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 

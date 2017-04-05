@@ -201,6 +201,7 @@ button {
                 margin: 0;
                 padding: 5px 0;
                 list-style-position: inside;
+                display: none;
 
                 .order-action {
                     font-weight: bold;
@@ -226,6 +227,7 @@ button {
                 .ingredients-btn {
                     padding: 5px;
                     float: right;
+                    font-size: .75rem;
                 }
 
                 .order-selected-price {
@@ -238,3 +240,11 @@ button {
     }
 }
 
+.ingredient-page-list {
+  .ingredient-title {
+  }
+
+  td, th {
+    border: thin solid #333;
+  }
+}

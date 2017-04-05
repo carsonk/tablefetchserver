@@ -4,8 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from api.models import MenuItem, MenuCategory
-from kitchen.forms.menu_item import MenuItemForm, MenuCategoryForm
+from api.models import MenuItem, MenuIngredient, MenuCategory
+from kitchen.forms.menu_item import MenuItemForm, MenuIngredientForm, MenuCategoryForm
+from tablefetchserver import helpers
 
 def orders(request):
     context = {
@@ -50,25 +51,16 @@ def menu(request, category_id=None):
     }
     return render(request, "kitchen/menu.html", context)
 
+def menu_ingredients(request):
+    ingredients = MenuIngredient.objects.all()
+    context = {
+        "ingredients": ingredients,
+        "side_active": "menu"
+    }
+    return render(request, "kitchen/menu_ingredients.html", context)
+
 def menu_category_create(request, edit=None):
-    success = False
-    category = None
-
-    if edit is None:
-        form = MenuCategoryForm(request.POST or None)
-    else:
-        category = get_object_or_404(MenuCategory, pk=edit)
-
-        if request.POST:
-            form = MenuCategoryForm(request.POST)
-        else:
-            form = MenuCategoryForm(instance=category)
-
-    if request.method == 'POST':
-        if form.is_valid():
-            sucess = True
-            form.save()
-            form = MenuCategoryForm()
+    (success, category, form) = helpers.construct_model_form(MenuCategoryForm, MenuCategory, request, edit)
 
     context = {
         "category": category,
@@ -78,25 +70,19 @@ def menu_category_create(request, edit=None):
     }
     return render(request, "kitchen/menu_category_create.html", context)
 
+def menu_ingredient_create(request, edit=None):
+    (success, ingredient, form) = helpers.construct_model_form(MenuIngredientForm, MenuIngredient, request, edit)
+
+    context = {
+        "ingredient": ingredient,
+        "side_active": "menu",
+        "success": success,
+        "form": form
+    }
+    return render(request, "kitchen/menu_ingredient_create.html", context)
+
 def menu_create(request, edit=None):
-    success = False
-    item = None
-
-    if edit is None:
-        form = MenuItemForm(request.POST or None)
-    else:
-        item = get_object_or_404(MenuItem, pk=edit)
-
-        if request.POST:
-            form = MenuItemForm(request.POST)
-        else:
-            form = MenuItemForm(instance=item)
-
-    if request.method == 'POST':
-        if form.is_valid():
-            success = True
-            form.save()
-            form = MenuItemForm()
+    (success, item, form) = helpers.construct_model_form(MenuItemForm, MenuItem, request, edit)
 
     context = {
         "item": item,
@@ -105,4 +91,3 @@ def menu_create(request, edit=None):
         "form": form
     }
     return render(request, "kitchen/menu_create.html", context)
-

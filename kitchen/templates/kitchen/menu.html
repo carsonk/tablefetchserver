@@ -15,12 +15,14 @@
 
     {% if category %}
         <div class="menu-breadcrumbs btn-group" role="group" aria-label="Category breadcrumbs">
-            <a class="btn btn-outline-secondary" href="{% url 'menu' %}">Menu</a>
+            <a class="btn btn-secondary" href="{% url 'menu' %}">Menu</a>
             {% for bcat in breadcrumbs %}
-                <a class="btn {% if forloop.last %}btn-secondary{%else%}btn-outline-secondary{%endif%}" href="{% url "menu" bcat.id %}">{{bcat.name}}</a>
+                <a class="btn btn-secondary" href="{% url "menu" bcat.id %}">{{bcat.name}}</a>
             {% endfor %}
         </div>
     {% endif %}
+
+    <a href="{% url "menu_ingredients" %}" class="btn btn-primary">Ingredients</a>
 </div>
 
 <br />

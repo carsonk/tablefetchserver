@@ -1,0 +1,34 @@
+{% extends "kitchen/dashboard_base.html" %}
+
+{% block content %}
+
+<a href="{% url "menu_ingredient_create" %}" class="btn btn-primary">Create</a>
+
+<br /><br />
+
+<table class="ingredient-page-list table">
+    <thead>
+        <tr>
+            <th>Ingredient</th>
+            <th>Tools</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ingredient in ingredients %}
+            <tr>
+                <td>
+                    <span class="ingredient-title">{{ ingredient.name }}</span>
+                    {% if ingredient.description|length > 0 %}
+                    <br />
+                        {{ ingredient.description }}
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url "menu_ingredient_edit" ingredient.id %}" class="btn btn-secondary">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -60,7 +60,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         return queryset
 
 class MenuIngredientViewSet(viewsets.ModelViewSet):
-    queryset = MenuIngredient
+    queryset = MenuIngredient.objects.all()
     serializer_class = MenuIngredientSerializer
 
 class OrderViewSet(viewsets.ModelViewSet):

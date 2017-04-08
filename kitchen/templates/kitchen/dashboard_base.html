@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-    
+
     <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel='stylesheet' type='text/css'>
     <link href="{% static 'common.scss'|compile %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row">    
+        <div class="row">
             <nav class="sidebar col-md-2 col-sm-3 p-0">
                 <ul class="nav nav-pills flex-column dashboard-menu">
                     <li class="nav-item">
@@ -46,15 +46,15 @@
         </div>
     </div>
 
+    <div style="display: none;" id="templates">
+        {% block templates %}{% endblock %}
+    </div>
+
     <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
     <script src="{% static 'tether/dist/js/tether.min.js' %}"></script>
     <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js-cookie/src/js.cookie.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
-
-    <div style="display: none;" id="templates">
-        {% block templates %}{% endblock %}
-    </div>
 
     {% block scripts %}{% endblock %}
 </body>

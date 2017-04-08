@@ -236,12 +236,12 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
 
         availableIngredients.forEach(function(ingredient) {
             var newIngredientElem = tpl.clone();
-            var radio = newIngredientElem.children("input");
+            var checkbox = newIngredientElem.children("input");
 
-            radio.val(ingredient.id);
+            checkbox.val(ingredient.id);
 
-            if ($.inArray(ingredient.id, selectedIdArr)) {
-                radio.prop("checked", true);
+            if ($.inArray(ingredient.id, selectedIdArr) > -1) {
+                checkbox.prop("checked", true);
             }
 
             newIngredientElem.children(".modal-ingredient-title")

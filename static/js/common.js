@@ -37,12 +37,24 @@ function findModelById(arr, id) {
     return foundItem;
 }
 
+function getIdsFromModels(modelArr) {
+    var idArr = [];
+
+    modelArr.forEach(function(instance) {
+        idArr.push(instance.id);
+    });
+
+    return idArr;
+}
+
 function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     this.apiItemsUrl = itemsUrl;
     this.apiCategoriesUrl = categoriesUrl;
 
     this.categories = [];
     this.items = [];
+
+    this.selectedItems = [];
 
     this.initListeners = function() {
         var thisWidget = this;
@@ -60,16 +72,18 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             thisWidget.getCategoryList(categoryId, selectList, thisWidget.loadMenu);
         });
 
+        // Load menu with categories.
         $(".order-select-breadcrumbs").on('click', 'li', function(e) {
             var elem = $(this);
             var breadcrumbs = elem.parent(".order-select-breadcrumbs");
             var selectList = breadcrumbs.parent().children(".menu-select-list");
             var categoryId = elem.data("category");
-            
+
             thisWidget.getCategoryList(categoryId, selectList, thisWidget.loadMenu);
             thisWidget.gotoCategoryBreadcrumb(breadcrumbs, categoryId);
         });
-        
+
+        // Click selected item button.
         $(".menu-select-list").on("click", ".menu-select-item", function(e) {
             var elem = $(this);
             var itemId = elem.data("item");
@@ -86,9 +100,10 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             thisWidget.addSelectedItem(container, item);
         });
 
+        // Click quantity controls on selected ingredient.
         $(".order-selected-items").on("click", ".selected-tools button", function(e) {
             e.preventDefault();
-            
+
             var elem = $(this);
             var selectedTools = elem.parent(".selected-tools");
             var quantityButton = selectedTools.children(".selected-quantity");
@@ -101,11 +116,22 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
                 value++;
             else
                 value--;
-            
+
             if (value > 0) {
                 quantityButton.text(value);
                 quantityField.val(value);
             }
+        });
+
+        // Click ingredients button on selected item.
+        $(".order-selected-items").on("click", ".ingredients-btn", function(e) {
+            e.preventDefault();
+
+            var selectedItem = $(this).closest(".order-selected-item");
+            var itemId = selectedItem.data("item");
+            var container = selectedItem.parent(".order-selected-items");
+
+            thisWidget.openIngredientSelector(container, itemId);
         });
     }
 
@@ -128,7 +154,7 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             });
         }, "json");
     }
-    
+
     this.loadMenu = function(container, menuItems, menuCategories) {
         var catTpl = $(".tpl-menu-select-category li").first().clone();
         var itemTpl = $(".tpl-menu-select-item li").first().clone();
@@ -187,7 +213,70 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
         tpl.find(".selected-title").text(item.name);
         tpl.data("item", item.id);
 
+        this.selectedItems.push(item);
         container.append(tpl);
     }
-}
 
+    this.openIngredientSelector = function(container, itemId) {
+        var selectorModal = $("#ingredients-selector-modal");
+        var thisWidget = this;
+
+        this.getItem(itemId, function(item) {
+            selectorModal.modal('show');
+            thisWidget.fillIngredientsSelector(item.possible_ingredients, item.default_ingredients);
+        });
+    }
+
+    this.fillIngredientsSelector = function(availableIngredients, selectedIngredients) {
+        var selectorModalBody = $("#ingredients-selector-modal .modal-body");
+        var tpl = $(".tpl-modal-ingredient").children("label");
+        var selectedIdArr = getIdsFromModels(selectedIngredients);
+
+        selectorModalBody.html("");
+
+        availableIngredients.forEach(function(ingredient) {
+            var newIngredientElem = tpl.clone();
+            var radio = newIngredientElem.children("input");
+
+            radio.val(ingredient.id);
+
+            if ($.inArray(ingredient.id, selectedIdArr)) {
+                radio.prop("checked", true);
+            }
+
+            newIngredientElem.children(".modal-ingredient-title")
+                .text(ingredient.name);
+
+            selectorModalBody.append(newIngredientElem);
+        })
+    }
+
+    this.collectSelectedIngredients = function(itemId) {
+        var selectorModal = $("#ingredients-selector-modal");
+    }
+
+    this.getItem = function(itemId, callback) {
+        var item = findModelById(this.items, itemId);
+
+        if (item != null) {
+            callback(item);
+        } else {
+            this.getItemAjax(itemId, callback);
+        }
+    }
+
+    this.getItemAjax = function(itemId, callback) {
+        var url = this.apiItemsUrl + itemId;
+
+        $.get(url, {}, function(data) {
+            if (typeof data.id != "undefined") {
+                callback(data);
+            } else {
+                console.log("Failed to retrieve item...");
+                console.log(data);
+            }
+        });
+    }
+
+
+}

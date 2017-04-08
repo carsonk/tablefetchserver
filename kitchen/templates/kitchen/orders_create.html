@@ -48,6 +48,23 @@
     </div>
 </form>
 
+<div class="modal fade" id="ingredients-selector-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select ingredients</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
@@ -65,8 +82,15 @@
     <li class="btn btn-secondary"><a></a></li>
 </ul>
 
+<div class="tpl-modal-ingredient">
+    <label class="btn btn-secondary">
+        <input type="checkbox" name="ingredient" autocomplete="off" />
+        <span class="modal-ingredient-title"></span>
+    </label>
+</div>
+
 <ul class="tpl-order-selected-item">
-    <li>
+    <li class="order-selected-item">
         <div class="order-selected-body clearfix">
             <div class="selected-tools btn-group float-right">
                 <button class="select-quantity-dec btn btn-danger" aria-label="Add ingredient">-</button>

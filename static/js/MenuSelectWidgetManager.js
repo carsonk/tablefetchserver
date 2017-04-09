@@ -8,6 +8,9 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
 
     this.selectedItems = [];
 
+    // Allows us to assign unique number to each selected item.
+    this.currentSelectedIndex = 0;
+
     this.initListeners = function() {
         var thisWidget = this;
 
@@ -80,10 +83,10 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             e.preventDefault();
 
             var selectedItem = $(this).closest(".order-selected-item");
-            var itemId = selectedItem.data("item");
+            var selectedIndex = selectedItem.data("selectedIndex");
             var container = selectedItem.parent(".order-selected-items");
 
-            thisWidget.openIngredientSelector(container, itemId);
+            thisWidget.openIngredientSelector(container, selectedIndex);
         });
 
         $('#ingredients-selector-modal').on('hidden.bs.modal', function (e) {
@@ -169,34 +172,35 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
 
         tpl.find(".selected-title").text(item.name);
         tpl.data("item", item.id);
+        tpl.data("selectedIndex", this.currentSelectedIndex);
 
         var clonedItem = $.extend({}, item);
+        clonedItem.selectedIndex = this.currentSelectedIndex;
+        clonedItem.selectedIngredients = clonedItem.default_ingredients.slice();
         this.selectedItems.push(clonedItem);
 
+        this.currentSelectedIndex++;
         container.append(tpl);
     }
 
-    this.openIngredientSelector = function(container, itemId) {
+    this.openIngredientSelector = function(container, selectedIndex) {
         var selectorModal = $("#ingredients-selector-modal");
-        var thisWidget = this;
+        var selectedItem = this.getSelectedItem(selectedIndex);
 
-        this.getItem(itemId, function(item) {
-            selectorModal.data("item", itemId);
-            thisWidget.fillIngredientsSelector(item.possible_ingredients, item.default_ingredients);
-            selectorModal.modal('show');
-        });
+        selectorModal.data("item", selectedItem.id);
+        selectorModal.data("selectedIndex", selectedIndex)
+        this.fillIngredientsSelector(selectedItem);
+        selectorModal.modal('show');
     }
 
-    this.fillIngredientsSelector = function(availableIngredients, selectedIngredients) {
-        // TODO: Handle multiple selections of same ingredient.
-
+    this.fillIngredientsSelector = function(item) {
         var selectorModalBody = $("#ingredients-selector-modal .modal-body");
         var tpl = $(".tpl-modal-ingredient").children("label");
-        var selectedIdArr = getIdsFromModels(selectedIngredients);
+        var selectedIdArr = getIdsFromModels(item.selectedIngredients);
 
         selectorModalBody.html("");
 
-        availableIngredients.forEach(function(ingredient) {
+        item.possible_ingredients.forEach(function(ingredient) {
             var newIngredientElem = tpl.clone();
             var checkbox = newIngredientElem.children("input");
 
@@ -215,17 +219,23 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
 
     this.collectSelectedIngredients = function() {
         var selectorModal = $("#ingredients-selector-modal");
-        var itemId = selectorModal.data("item");
-        var selectedItem = findModelById(this.selectedItems, itemId);
+        var selectedIndex = selectorModal.data("selectedIndex");
+        var selectedItem = this.getSelectedItem(selectedIndex);
         var thisWidget = this;
         var selectedIngredientIds = [];
-        var selectedItemElem = this.getSelectedItemElem(itemId);
+        var selectedItemElem = this.getSelectedItemElem(selectedIndex);
+
+        selectedItem.selectedIngredients = [];
 
         selectorModal.find(".modal-body label input").each(function(index) {
             var elem = $(this);
+            var itemId = parseInt(elem.val());
+            var ingredient = findModelById(selectedItem.possible_ingredients, itemId);
 
-            if (elem.prop("checked"))
-                selectedIngredientIds.push(parseInt(elem.val()));
+            if (elem.prop("checked")) {
+                selectedIngredientIds.push(parseInt(itemId));
+                selectedItem.selectedIngredients.push(ingredient);
+            }
         });
 
         var selectedIngredientsElem = selectedItemElem.children(".order-selected-ingredients");
@@ -299,16 +309,37 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
         });
     }
 
-    this.getSelectedItemElem = function(itemId) {
+    this.getSelectedItemElem = function(selectedIndex) {
         var foundElem = null;
 
         $(".order-selected-items li").each(function(index, element) {
-            if ($(element).data("item") == itemId) {
+            if ($(element).data("selectedIndex") == selectedIndex) {
                 foundElem = $(element);
                 return false;
             }
         });
 
         return foundElem;
+    }
+
+    // Get the number of times an item has been selected.
+    this.countSelectedItem = function(itemId) {
+        var count = 0;
+
+        for (var item of this.selectedItems) {
+            if (item.id == itemId)
+                count++;
+        }
+
+        return count;
+    }
+
+    this.getSelectedItem = function(selectedIndex) {
+        for (var item of this.selectedItems) {
+            if (item.selectedIndex == selectedIndex)
+                return item;
+        }
+
+        return null;
     }
 }

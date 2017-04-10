@@ -12,16 +12,16 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     this.currentSelectedIndex = 0;
 
     this.initListeners = function() {
-        var thisWidget = this;
+        const thisWidget = this;
 
         // Listen for clicks when categories are selected.
         $(".menu-select-list").on('click', '.menu-select-category', function(e) {
-            var elem = $(this);
-            var categoryId = elem.data("category");
-            var selectList = elem.parent(".menu-select-list");
-            var breadcrumbs = selectList.parent(".order-select-items")
+            const elem = $(this);
+            const categoryId = elem.data("category");
+            const selectList = elem.parent(".menu-select-list");
+            const breadcrumbs = selectList.parent(".order-select-items")
                 .children(".order-select-breadcrumbs");
-            var categoryName = elem.text();
+            const categoryName = elem.text();
 
             thisWidget.pushCategoryBreadcrumb(breadcrumbs, categoryId, categoryName);
             thisWidget.getCategoryList(categoryId, selectList, thisWidget.loadMenu);
@@ -29,10 +29,10 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
 
         // Load menu with categories.
         $(".order-select-breadcrumbs").on('click', 'li', function(e) {
-            var elem = $(this);
-            var breadcrumbs = elem.parent(".order-select-breadcrumbs");
-            var selectList = breadcrumbs.parent().children(".menu-select-list");
-            var categoryId = elem.data("category");
+            const elem = $(this);
+            const breadcrumbs = elem.parent(".order-select-breadcrumbs");
+            const selectList = breadcrumbs.parent().children(".menu-select-list");
+            const categoryId = elem.data("category");
 
             thisWidget.getCategoryList(categoryId, selectList, thisWidget.loadMenu);
             thisWidget.gotoCategoryBreadcrumb(breadcrumbs, categoryId);
@@ -40,17 +40,17 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
 
         // Click selected item button.
         $(".menu-select-list").on("click", ".menu-select-item", function(e) {
-            var elem = $(this);
-            var itemId = elem.data("item");
-            var selectWidget = elem.parent(".menu-select-list")
+            const elem = $(this);
+            const itemId = elem.data("item");
+            const selectWidget = elem.parent(".menu-select-list")
                 .parent(".order-select-items");
 
-            var item = findModelById(thisWidget.items, itemId);
+            const item = findModelById(thisWidget.items, itemId);
 
             if (typeof item === "undefined")
                 return;
 
-            var container = selectWidget.children(".order-selected-items").first();
+            const container = selectWidget.children(".order-selected-items").first();
 
             thisWidget.addSelectedItem(container, item);
         });
@@ -59,13 +59,13 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
         $(".order-selected-items").on("click", ".selected-tools button", function(e) {
             e.preventDefault();
 
-            var elem = $(this);
-            var selectedTools = elem.parent(".selected-tools");
-            var quantityButton = selectedTools.children(".selected-quantity");
-            var quantityField = selectedTools.children("input[name='quantity']");
-            var increment = elem.hasClass("select-quantity-inc");
+            const elem = $(this);
+            const selectedTools = elem.parent(".selected-tools");
+            const quantityButton = selectedTools.children(".selected-quantity");
+            const quantityField = selectedTools.children("input[name='quantity']");
+            const increment = elem.hasClass("select-quantity-inc");
 
-            var value = parseInt(quantityField.val());
+            let value = parseInt(quantityField.val());
 
             if (increment)
                 value++;
@@ -82,9 +82,9 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
         $(".order-selected-items").on("click", ".ingredients-btn", function(e) {
             e.preventDefault();
 
-            var selectedItem = $(this).closest(".order-selected-item");
-            var selectedIndex = selectedItem.data("selectedIndex");
-            var container = selectedItem.parent(".order-selected-items");
+            const selectedItem = $(this).closest(".order-selected-item");
+            const selectedIndex = selectedItem.data("selectedIndex");
+            const container = selectedItem.parent(".order-selected-items");
 
             thisWidget.openIngredientSelector(container, selectedIndex);
         });
@@ -96,18 +96,18 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.getCategoryList = function(categoryId, container, callback) {
-        var data = (categoryId > 0) ? {"category": categoryId} : {};
-        var itemsUrl = this.apiItemsUrl;
-        var catUrl = this.apiCategoriesUrl;
-        var thisWidget = this;
+        let data = (categoryId > 0) ? {"category": categoryId} : {};
+        const itemsUrl = this.apiItemsUrl;
+        const catUrl = this.apiCategoriesUrl;
+        const thisWidget = this;
 
         $.get(itemsUrl, data, function(data) {
-            var menuItems = data.results;
+            const menuItems = data.results;
             data = (categoryId > 0) ? {"parent": categoryId} : {};
             thisWidget.items = menuItems;
 
             $.get(catUrl, data, function(data) {
-                var menuCategories = data.results;
+                const menuCategories = data.results;
                 thisWidget.categories = menuCategories;
 
                 callback(container, menuItems, menuCategories);
@@ -116,13 +116,13 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.loadMenu = function(container, menuItems, menuCategories) {
-        var catTpl = $(".tpl-menu-select-category li").first().clone();
-        var itemTpl = $(".tpl-menu-select-item li").first().clone();
+        const catTpl = $(".tpl-menu-select-category li").first().clone();
+        const itemTpl = $(".tpl-menu-select-item li").first().clone();
 
         container.html("");
 
         menuCategories.forEach(function(category) {
-            var currentTpl = catTpl.clone();
+            const currentTpl = catTpl.clone();
 
             currentTpl.data("category", category.id);
             currentTpl.text(category.name);
@@ -130,7 +130,7 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
         });
 
         menuItems.forEach(function(item) {
-            var currentTpl = itemTpl.clone();
+            const currentTpl = itemTpl.clone();
 
             currentTpl.data("item", item.id);
             currentTpl.text(item.name);
@@ -139,7 +139,7 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.pushCategoryBreadcrumb = function(container, categoryId, categoryName) {
-        var template = $(".tpl-order-select-breadcrumb")
+        const template = $(".tpl-order-select-breadcrumb")
             .children("li").clone();
         template.data("category", categoryId);
         template.children("a").text(categoryName);
@@ -151,10 +151,10 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.gotoCategoryBreadcrumb = function(container, categoryId) {
-        var found = false;
+        let found = false;
 
         while(!found) {
-            var elem = container.children().last();
+            const elem = container.children().last();
 
             if (!elem)
                 break;
@@ -168,13 +168,17 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.addSelectedItem = function(container, item) {
-        var tpl = $(".tpl-order-selected-item").children("li").first().clone();
+        const tpl = $(".tpl-order-selected-item").children("li").first().clone();
 
         tpl.find(".selected-title").text(item.name);
         tpl.data("item", item.id);
         tpl.data("selectedIndex", this.currentSelectedIndex);
 
-        var clonedItem = $.extend({}, item);
+        // Set hidden input field telling server how to parse data.
+        const itemIdSelectIndexInputPair = this.currentSelectedIndex + "-" + item.id;
+        tpl.find(".hidden-item-id-index").val(itemIdSelectIndexInputPair);
+
+        const clonedItem = $.extend({}, item);
         clonedItem.selectedIndex = this.currentSelectedIndex;
         clonedItem.selectedIngredients = clonedItem.default_ingredients.slice();
         this.selectedItems.push(clonedItem);
@@ -184,8 +188,8 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.openIngredientSelector = function(container, selectedIndex) {
-        var selectorModal = $("#ingredients-selector-modal");
-        var selectedItem = this.getSelectedItem(selectedIndex);
+        const selectorModal = $("#ingredients-selector-modal");
+        const selectedItem = this.getSelectedItem(selectedIndex);
 
         selectorModal.data("item", selectedItem.id);
         selectorModal.data("selectedIndex", selectedIndex)
@@ -194,15 +198,15 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.fillIngredientsSelector = function(item) {
-        var selectorModalBody = $("#ingredients-selector-modal .modal-body");
-        var tpl = $(".tpl-modal-ingredient").children("label");
-        var selectedIdArr = getIdsFromModels(item.selectedIngredients);
+        const selectorModalBody = $("#ingredients-selector-modal .modal-body");
+        const tpl = $(".tpl-modal-ingredient").children("label");
+        const selectedIdArr = getIdsFromModels(item.selectedIngredients);
 
         selectorModalBody.html("");
 
         item.possible_ingredients.forEach(function(ingredient) {
-            var newIngredientElem = tpl.clone();
-            var checkbox = newIngredientElem.children("input");
+            const newIngredientElem = tpl.clone();
+            const checkbox = newIngredientElem.children("input");
 
             checkbox.val(ingredient.id);
 
@@ -218,19 +222,18 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.collectSelectedIngredients = function() {
-        var selectorModal = $("#ingredients-selector-modal");
-        var selectedIndex = selectorModal.data("selectedIndex");
-        var selectedItem = this.getSelectedItem(selectedIndex);
-        var thisWidget = this;
-        var selectedIngredientIds = [];
-        var selectedItemElem = this.getSelectedItemElem(selectedIndex);
+        const selectorModal = $("#ingredients-selector-modal");
+        const selectedIndex = selectorModal.data("selectedIndex");
+        const selectedItem = this.getSelectedItem(selectedIndex);
+        const selectedIngredientIds = [];
+        const selectedItemElem = this.getSelectedItemElem(selectedIndex);
 
         selectedItem.selectedIngredients = [];
 
         selectorModal.find(".modal-body label input").each(function(index) {
-            var elem = $(this);
-            var itemId = parseInt(elem.val());
-            var ingredient = findModelById(selectedItem.possible_ingredients, itemId);
+            const elem = $(this);
+            const itemId = parseInt(elem.val());
+            const ingredient = findModelById(selectedItem.possible_ingredients, itemId);
 
             if (elem.prop("checked")) {
                 selectedIngredientIds.push(parseInt(itemId));
@@ -238,20 +241,20 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             }
         });
 
-        var selectedIngredientsElem = selectedItemElem.children(".order-selected-ingredients");
-        var addedTpl = $(".tpl-order-selected-ingredient .order-selected-add");
-        var totalChanges = 0;
+        const selectedIngredientsElem = selectedItemElem.children(".order-selected-ingredients");
+        const addedTpl = $(".tpl-order-selected-ingredient .order-selected-add");
+        let totalChanges = 0;
 
-        var usedDefaults = [];
+        const usedDefaults = [];
 
         selectedIngredientsElem.html("");
 
-        var unusedDefaults = getIdsFromModels(selectedItem.default_ingredients);
+        const unusedDefaults = getIdsFromModels(selectedItem.default_ingredients);
 
         // Pick up the added ingredients and note used defaults.
-        selectedIngredientIds.forEach(function(selectedId) {
-            var ingredient = findModelById(selectedItem.default_ingredients, selectedId);
-            var defaultIngredient = true;
+        for (selectedId of selectedIngredientIds) {
+            let ingredient = findModelById(selectedItem.default_ingredients, selectedId);
+            let defaultIngredient = true;
 
             if (ingredient == null) {
                 ingredient = findModelById(selectedItem.possible_ingredients, selectedId);
@@ -262,23 +265,23 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             if (defaultIngredient) {
                 unusedDefaults.splice(unusedDefaults.indexOf(selectedId), 1);
             } else {
-                var tpl = addedTpl.clone();
+                const tpl = addedTpl.clone();
                 tpl.append(ingredient.name);
                 selectedIngredientsElem.append(tpl);
                 totalChanges++;
             }
-        });
+        }
 
-        var removedTpl = $(".tpl-order-selected-ingredient .order-selected-remove");
+        const removedTpl = $(".tpl-order-selected-ingredient .order-selected-remove");
 
         // Create list of removed ingredients.
-        unusedDefaults.forEach(function(selectedId) {
-            var ingredient = findModelById(selectedItem.default_ingredients, selectedId);
-            var tpl = removedTpl.clone();
+        for (selectedId of unusedDefaults) {
+            const ingredient = findModelById(selectedItem.default_ingredients, selectedId);
+            const tpl = removedTpl.clone();
             tpl.append(ingredient.name);
             selectedIngredientsElem.append(tpl);
             totalChanges++;
-        });
+        }
 
         if (totalChanges > 0)
             selectedIngredientsElem.show();
@@ -286,8 +289,26 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             selectedIngredientsElem.hide();
     }
 
+    // Get array of serialized selected items with clean ingredient subtypes, intended for submission to server.
+    this.getSerializedSelected = function() {
+        const serialized = [];
+
+        for (item of this.selectedItems) {
+            const srzItem = {
+                "id": item.id,
+                "add_ingredients": [],
+                "remove_ingredients": []
+            };
+
+            for (ingredient of item.selectedIngredients) {
+            }
+
+            serialized.push(srzItem);
+        }
+    }
+
     this.getItem = function(itemId, callback) {
-        var item = findModelById(this.items, itemId);
+        const item = findModelById(this.items, itemId);
 
         if (item != null) {
             callback(item);
@@ -297,7 +318,7 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.getItemAjax = function(itemId, callback) {
-        var url = this.apiItemsUrl + itemId;
+        const url = this.apiItemsUrl + itemId;
 
         $.get(url, {}, function(data) {
             if (typeof data.id != "undefined") {
@@ -310,7 +331,7 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.getSelectedItemElem = function(selectedIndex) {
-        var foundElem = null;
+        let foundElem = null;
 
         $(".order-selected-items li").each(function(index, element) {
             if ($(element).data("selectedIndex") == selectedIndex) {
@@ -324,9 +345,9 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
 
     // Get the number of times an item has been selected.
     this.countSelectedItem = function(itemId) {
-        var count = 0;
+        let count = 0;
 
-        for (var item of this.selectedItems) {
+        for (const item of this.selectedItems) {
             if (item.id == itemId)
                 count++;
         }
@@ -335,7 +356,7 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.getSelectedItem = function(selectedIndex) {
-        for (var item of this.selectedItems) {
+        for (const item of this.selectedItems) {
             if (item.selectedIndex == selectedIndex)
                 return item;
         }

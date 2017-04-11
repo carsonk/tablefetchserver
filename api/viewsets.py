@@ -45,7 +45,7 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
         category_id = self.request.query_params.get('parent', None)
         if category_id is not None:
             # If category ID is 0, use no category.
-            category_id = category_id or None
+            category_id = int(category_id) or None
             queryset = queryset.filter(parent__id=category_id)
         return queryset
 
@@ -59,7 +59,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         category_id = self.request.query_params.get('category', None)
         if category_id is not None:
             # If category ID is 0, use no category.
-            category_id = category_id or None
+            category_id = int(category_id) or None
             queryset = queryset.filter(category__id=category_id)
         return queryset
 

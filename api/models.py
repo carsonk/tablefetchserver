@@ -23,8 +23,8 @@ class Party(models.Model):
 
     size = models.PositiveSmallIntegerField()
     time_arrived = models.DateTimeField()
-    time_seated = models.DateTimeField()
-    time_paid = models.DateTimeField()
+    time_seated = models.DateTimeField(null=True, blank=True, default=None)
+    time_paid = models.DateTimeField(null=True, blank=True, default=None)
 
 class PartyMember(models.Model):
     """ An individual member of a party. """

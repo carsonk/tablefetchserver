@@ -75,7 +75,7 @@ class Order(models.Model):
     """
 
     party = models.ForeignKey(Party, on_delete=models.CASCADE)
-    party_member = models.OneToOneField(PartyMember, on_delete=models.CASCADE)
+    party_member = models.ForeignKey(PartyMember, on_delete=models.CASCADE)
 
     menu_items = models.ManyToManyField(MenuItem, through='OrderMenuItem')
 
@@ -91,4 +91,3 @@ class OrderMenuItem(models.Model):
             related_name='removed_from', default=None, blank=True)
 
     comments = models.TextField()
-

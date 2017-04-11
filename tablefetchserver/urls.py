@@ -20,11 +20,10 @@ from tablefetchserver import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    url(r'^api/', include(api.urls.router.urls)),
+    url(r'^api/', include(api.urls.urlpatterns)),
     url(r'^admin/', admin.site.urls),
     url(r'^kitchen/', include(kitchen.urls.urlpatterns))
 ]
 
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
-

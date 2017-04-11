@@ -19,7 +19,7 @@ class Table(models.Model):
 class Party(models.Model):
     """ A party of people sitting at a specified table. """
 
-    table = models.OneToOneField(Table, on_delete=models.CASCADE)
+    table = models.ForeignKey(Table, on_delete=models.CASCADE, null=True, blank=True)
 
     size = models.PositiveSmallIntegerField()
     time_arrived = models.DateTimeField()

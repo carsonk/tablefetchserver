@@ -60,22 +60,12 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             e.preventDefault();
 
             const elem = $(this);
-            const selectedTools = elem.parent(".selected-tools");
-            const quantityButton = selectedTools.children(".selected-quantity");
-            const quantityField = selectedTools.children("input[name='quantity']");
             const increment = elem.hasClass("select-quantity-inc");
+            const selectedItemElem = elem.closest(".order-selected-item");
+            const selectedIndex = selectedItemElem.data("selectedIndex");
 
-            let value = parseInt(quantityField.val());
-
-            if (increment)
-                value++;
-            else
-                value--;
-
-            if (value > 0) {
-                quantityButton.text(value);
-                quantityField.val(value);
-            }
+            let valueChange = increment ? 1 : -1;
+            thisWidget.incrementSelectedQuantity(selectedIndex, valueChange);
         });
 
         // Click ingredients button on selected item.
@@ -178,9 +168,11 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
         const itemIdSelectIndexInputPair = this.currentSelectedIndex + "-" + item.id;
         tpl.find(".hidden-item-id-index").val(itemIdSelectIndexInputPair);
 
+        // Clone item, add properties for selected items, and add to
         const clonedItem = $.extend({}, item);
         clonedItem.selectedIndex = this.currentSelectedIndex;
         clonedItem.selectedIngredients = clonedItem.default_ingredients.slice();
+        clonedItem.quantity = 1;
         this.selectedItems.push(clonedItem);
 
         this.currentSelectedIndex++;
@@ -289,22 +281,72 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             selectedIngredientsElem.hide();
     }
 
-    // Get array of serialized selected items with clean ingredient subtypes, intended for submission to server.
-    this.getSerializedSelected = function() {
+    /* Change quantity of selected item by selectedIndex, incrementing by incrementQuantity. */
+    this.incrementSelectedQuantity = function(selectedIndex, incrementQuantity) {
+        const selectedElem = this.getSelectedItemElem(selectedIndex);
+        const selectedItem = this.getSelectedItem(selectedIndex);
+
+        const quantityButton = selectedElem.find(".selected-quantity");
+        const quantityField = selectedElem.find("input[name='quantity']");
+
+        if ((selectedItem.quantity + incrementQuantity) > 0) {
+            selectedItem.quantity += incrementQuantity;
+            quantityButton.text(selectedItem.quantity);
+            quantityField.val(selectedItem.quantity);
+        }
+    }
+
+    /* Get array of serialized selected items with clean ingredient subtypes, intended for submission to server. */
+    this.getSerializedSelectedIds = function() {
         const serialized = [];
 
         for (item of this.selectedItems) {
             const srzItem = {
                 "id": item.id,
                 "add_ingredients": [],
-                "remove_ingredients": []
+                "remove_ingredients": [],
+                "quantity": item.quantity
             };
 
-            for (ingredient of item.selectedIngredients) {
-            }
+            const diff = this.getDefaultIngredientsDiff(item.default_ingredients, item.selectedIngredients);
+            srzItem.add_ingredients = diff.add;
+            srzItem.remove_ingredients = diff.remove;
 
             serialized.push(srzItem);
         }
+
+        return serialized;
+    }
+
+    /* Returns object with fields add and remove, containing the added items and the removed items, respectively. */
+    this.getDefaultIngredientsDiff = function(defaultIngredients, selectedIngredients) {
+        const diff = {"add": [], "remove": []};
+        const defaultLeft = defaultIngredients.slice();
+        const selectedLeft = selectedIngredients.slice();
+        let defaultIndex = defaultIngredients.length;
+        let selectedIndex = selectedIngredients.length;
+
+        while(selectedIndex--) {
+            let leftIndex = defaultLeft.length;
+            let found = false;
+
+            while (leftIndex--) {
+                if (defaultLeft[leftIndex].id == selectedLeft[selectedIndex].id) {
+                    // This is a default item. Remove both from the list.
+                    found = true;
+                    defaultLeft.splice(leftIndex, 1);
+                    break;
+                }
+            }
+
+            if (!found)
+                diff.add.push(selectedLeft[selectedIndex]);
+        }
+
+        // What is remaining is items to remove.
+        diff.remove = defaultLeft.slice();
+
+        return diff;
     }
 
     this.getItem = function(itemId, callback) {

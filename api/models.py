@@ -7,7 +7,8 @@ class TableMap(models.Model):
 
 class Table(models.Model):
     """ Representation of a table in the restaurant. """
-
+    
+    table_map = models.ForeignKey(TableMap, on_delete=models.CASCADE, null=True, blank=True)
     num_seats = models.PositiveSmallIntegerField()
 
     x_coord = models.IntegerField() # C-coord of corner on map.

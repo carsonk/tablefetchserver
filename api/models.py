@@ -77,6 +77,10 @@ class Order(models.Model):
     party = models.ForeignKey(Party, on_delete=models.CASCADE)
     party_member = models.ForeignKey(PartyMember, on_delete=models.CASCADE)
 
+    time_placed = models.DateTimeField(auto_now_add=True)
+    time_updated = models.DateTimeField(auto_now=True)
+    time_finished = models.DateTimeField(default=None, blank=True, null=True)
+
     menu_items = models.ManyToManyField(MenuItem, through='OrderMenuItem')
 
 class OrderMenuItem(models.Model):
@@ -84,6 +88,7 @@ class OrderMenuItem(models.Model):
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem)
+    quantity = models.PositiveSmallIntegerField(default=1)
 
     add_ingredients = models.ManyToManyField(MenuIngredient,
             related_name='added_to', default=None, blank=True)

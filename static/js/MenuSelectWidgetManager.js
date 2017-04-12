@@ -86,17 +86,17 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
     }
 
     this.getCategoryList = function(categoryId, container, callback) {
-        let data = (categoryId > 0) ? {"category": categoryId} : {};
+        let queryData = {"category": categoryId};
         const itemsUrl = this.apiItemsUrl;
         const catUrl = this.apiCategoriesUrl;
         const thisWidget = this;
 
-        $.get(itemsUrl, data, function(data) {
+        $.get(itemsUrl, queryData, function(data) {
             const menuItems = data.results;
-            data = (categoryId > 0) ? {"parent": categoryId} : {};
             thisWidget.items = menuItems;
 
-            $.get(catUrl, data, function(data) {
+            queryData = {"parent": categoryId};
+            $.get(catUrl, queryData, function(data) {
                 const menuCategories = data.results;
                 thisWidget.categories = menuCategories;
 
@@ -309,8 +309,8 @@ function MenuSelectWidgetManager(categoriesUrl, itemsUrl) {
             };
 
             const diff = this.getDefaultIngredientsDiff(item.default_ingredients, item.selectedIngredients);
-            srzItem.add_ingredients = diff.add;
-            srzItem.remove_ingredients = diff.remove;
+            srzItem.add_ingredients = getIdsFromModels(diff.add);
+            srzItem.remove_ingredients = getIdsFromModels(diff.remove);
 
             serialized.push(srzItem);
         }

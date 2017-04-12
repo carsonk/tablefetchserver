@@ -19,11 +19,11 @@
         <div class="party-member-container">
             <span id="party-member-list" data-toggle="buttons">
                 <label class="btn btn-secondary">
-                    <input type="radio" name="party_member" autocomplete="off" />
+                    <input type="radio" name="party_member" value="1" autocomplete="off" />
                     <span class="party-member-label">1</span>
                 </label>
                 <label class="btn btn-secondary">
-                    <input type="radio" name="party_member" autocomplete="off" />
+                    <input type="radio" name="party_member" value="2" autocomplete="off" />
                     <span class="party-member-label">2</span>
                 </label>
             </span>
@@ -121,27 +121,51 @@
 
 <script>
 
-var apiCategoriesUrl = "{% url "menucategory-list" %}";
-var apiItemsUrl = "{% url "menuitem-list" %}";
+const apiCategoriesUrl = "{% url "menucategory-list" %}";
+const apiItemsUrl = "{% url "menuitem-list" %}";
+const apiSubmitOrder = "{% url "api-submitorder" %}";
+const ordersUrl = "{% url "orders" %}";
 
-var current_party_index = 2;
+let current_party_index = 2;
 
-
-var menuWidget = new MenuSelectWidgetManager(
+const menuWidget = new MenuSelectWidgetManager(
         apiCategoriesUrl, apiItemsUrl);
 
 function addPartyMember() {
-    var elem = $(".party-member-container label").first().clone();
+    const elem = $(".party-member-container label").first().clone();
     elem.children(".party-member-label").replaceWith(++current_party_index);
 
     $("#party-member-list").append(" ");
     elem.appendTo("#party-member-list");
 }
 
+function submitOrder() {
+    const party = $("select[name=party]", '#create-order-form').val();
+    const member = $('input[name=party_member]:checked', '#create-order-form').val();
+    const selectedItems = menuWidget.getSerializedSelectedIds();
+
+    const postData = {
+        "party": parseInt(party),
+        "member": parseInt(member),
+        "items": selectedItems
+    };
+
+    $.post(apiSubmitOrder, JSON.stringify(postData), function(data) {
+        if(data.success) {
+            console.log("Success!");
+            window.location = ordersUrl;
+        }
+    });
+}
+
 $(function() {
     jqueryAjaxSetup();
 
     $("#add-party-member").click(addPartyMember);
+    $("input[name=submit]", "#create-order-form").click(function(e) {
+        e.preventDefault();
+        submitOrder();
+    });
 
     menuWidget.initListeners();
 

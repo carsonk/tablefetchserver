@@ -18,6 +18,10 @@ def submit_order(request):
     success = False
     data = json.loads(request.body.decode("utf-8"))
 
+    if ("items" not in data) or ("party" not in data) or ("member" not in data) or \
+        (len(data["items"]) == 0):
+        return JsonResponse({'success': False, 'message': 'Something is missing from submitted data.'})
+
     is_new_party = False
     if data["party"] == 0:
         party = Party()

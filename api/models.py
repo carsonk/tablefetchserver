@@ -5,6 +5,11 @@ class TableMap(models.Model):
 
     name = models.CharField(max_length=256)
 
+    # Width and height give proportions for map image.
+    # Will be scaled proportional to browser width.
+    width = models.PositiveSmallIntegerField(default=1000)
+    height = models.PositiveSmallIntegerField(default=600)
+
 class Table(models.Model):
     """ Representation of a table in the restaurant. """
     

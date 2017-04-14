@@ -1,0 +1,49 @@
+{% extends "kitchen/dashboard_base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="table-map-controls">
+
+</div>
+
+<svg class="table-map-container" style="width: 100%;" viewBox="0 0 1000 600">
+
+    <g class="table-group" style="fill: white; stroke: black; stroke-width: 3;" >
+        <rect id="table-1" x="3" y="3" width="75" height="75" data-id="1" transform="matrix(1 0 0 1 0 0)" />
+        <rect id="table-2" x="110" y="3" width="75" height="75" data-id="2" transform="matrix(1 0 0 1 0 0)" />
+        <rect id="table-3" x="219" y="3" width="75" height="75" data-id="3" transform="matrix(1 0 0 1 0 0)" />
+    </g>
+
+    <g class="table-label-group" style="font-size: 37;">
+
+    </g>
+</svg>
+
+{% endblock %}
+
+{% block templates %}
+
+        <text class="table-label-1" data-id="1" x="30" y="50">1</text>
+        <text class="table-label-2" data-id="2" x="137" y="50">2</text>
+        <text class="table-label-3" data-id="3" x="246" y="50">3</text>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'js/TableMapManager.js' %}"></script>
+
+<script>
+
+const mapManager = new TableMapManager(".table-map-container");
+
+$(function() {
+    mapManager.initListeners();
+    mapManager.collectInitialTables();
+});
+
+</script>
+
+{% endblock %}

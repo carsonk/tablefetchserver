@@ -33,3 +33,121 @@ function getIdsFromModels(modelArr) {
 
     return idArr;
 }
+
+function makeSVG(tag, attrs) {
+    var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs)
+        el.setAttribute(k, attrs[k]);
+    return el;
+}
+
+function SvgDragManager(jqContainer) {
+    /* TODO: Consider using DOM elements instead of jQuery, since there are some parts of
+     * jQuery that aren't guaranteed to work with SVG. */
+
+    this.jqContainer = $(jqContainer);
+    this.containerDom = this.jqContainer.get(0);
+    this.svgPt = this.containerDom.createSVGPoint();
+
+    this.cursOffsetX = 0;
+    this.cursOffsetY = 0;
+
+    this.selectedElement = 0;
+    this.currentX = 0;
+    this.currentY = 0;
+    this.currentMatrix = 0;
+    this.moveCallback = 0;
+
+    this.translateDimensions = function(x, y, callback) {
+        this.svgPt.x = x;
+        this.svgPt.y = y;
+
+        const adjustedPt = this.svgPt.matrixTransform(this.containerDom.getScreenCTM().inverse());
+
+        callback(adjustedPt.x, adjustedPt.y);
+    };
+
+    this.addListener = function(jqContainer, jqElem) {
+        const thisManager = this;
+
+        $(jqContainer).on("mousedown", jqElem, function(e) {
+            thisManager.selectElement(e);
+        });
+    }
+
+    this.addMoveCallback = function(handler) {
+        this.moveCallback = handler;
+    }
+
+    this.selectElement = function(evt) {
+        evt.preventDefault();
+        const thisManager = this;
+
+        if (this.selectedElement == 0) {
+            console.log("Selecting element...");
+
+            this.selectedElement = $(evt.target);
+            this.translateDimensions(evt.clientX, evt.clientY, function(x, y) {
+                thisManager.currentX = x;
+                thisManager.currentY = y;
+            });
+
+            const xAttr = this.selectedElement.attr("x");
+            const yAttr = this.selectedElement.attr("y");
+            this.cursOffsetX = thisManager.currentX - xAttr;
+            this.cursOffsetY = thisManager.currentY - yAttr;
+
+            this.jqContainer.on("mousemove", this.selectedElement, function(e) {
+                thisManager.moveElement(e);
+            });
+            this.jqContainer.on("mouseup", this.selectedElement, function(e) {
+                thisManager.deselectElement(e);
+            });
+        } else {
+            console.log("Element double selected...");
+        }
+    }
+
+    this.moveElement = function(evt) {
+        evt.preventDefault();
+
+        if (this.selectedElement != 0) {
+            let newX = 0, newY = 0;
+
+            this.translateDimensions(evt.clientX, evt.clientY, function(x, y) {
+                newX = x;
+                newY = y;
+            });
+
+            const newXAttr = newX - this.cursOffsetX;
+            const newYAttr = newY - this.cursOffsetY;
+
+            this.selectedElement.attr("x", newXAttr);
+            this.selectedElement.attr("y", newYAttr);
+
+            this.currentX = newX;
+            this.currentY = newY;
+
+            if (this.moveCallback != 0) {
+                this.moveCallback(evt, newXAttr, newYAttr);
+            }
+        } else {
+            console.log("Dodged unattached move...");
+        }
+    }
+
+    this.deselectElement = function(evt) {
+        evt.preventDefault();
+
+        if(this.selectedElement != 0){
+            console.log("Detaching " + this.selectedElement.data("id"))
+
+            this.jqContainer.off("mousemove");
+            this.jqContainer.off("mouseup");
+
+            this.selectedElement = 0;
+        } else {
+            console.log("failed to detach")
+        }
+    }
+}

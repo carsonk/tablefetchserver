@@ -4,9 +4,15 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from api.models import MenuItem, MenuIngredient, MenuCategory
+from api.models import MenuItem, MenuIngredient, MenuCategory, Table, TableMap
 from kitchen.forms.menu_item import MenuItemForm, MenuIngredientForm, MenuCategoryForm
 from tablefetchserver import helpers
+
+def map(request):
+    context = {
+        "side_active": "map"
+    }
+    return render(request, "kitchen/map.html", context)
 
 def orders(request):
     context = {

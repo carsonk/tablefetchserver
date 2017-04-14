@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
      url('^$', views.orders),
+     url('^map$', views.map, name='map'),
      url('^orders$', views.orders, name='orders'),
      url('^orders/create$', views.orders_create, name='orders_create'),
      url(r'^menu/(?P<category_id>\d+)?$', views.menu, name='menu'),

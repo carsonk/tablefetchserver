@@ -12,15 +12,17 @@ class TableMap(models.Model):
 
 class Table(models.Model):
     """ Representation of a table in the restaurant. """
-    
+
     table_map = models.ForeignKey(TableMap, on_delete=models.CASCADE, null=True, blank=True)
     num_seats = models.PositiveSmallIntegerField()
 
-    x_coord = models.IntegerField() # C-coord of corner on map.
-    y_coord = models.IntegerField() # Y-coord of corner on map.
-    width = models.IntegerField() # Width in pixels on map.
-    height = models.IntegerField() # Height in pixels on map.
-    color = models.IntegerField() # 32-bit RGB hexcolor.
+    name = models.SlugField(max_length=10)
+
+    x_coord = models.IntegerField(default=50) # C-coord of corner on map.
+    y_coord = models.IntegerField(default=50) # Y-coord of corner on map.
+    width = models.IntegerField(default=100) # Width in pixels on map.
+    height = models.IntegerField(default=100) # Height in pixels on map.
+    color = models.IntegerField(default=0xFFFFFF) # 32-bit RGB hexcolor.
 
 class Party(models.Model):
     """ A party of people sitting at a specified table. """

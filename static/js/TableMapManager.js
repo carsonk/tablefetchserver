@@ -8,7 +8,7 @@ function TableMapManager(tableMapContainer, apiTablesUrl) {
 
     this.tables = [];
 
-    this.TEXT_LABEL_PREFIX = "table-label-";
+    this.TEXT_LABEL_CLASS_PREFIX = "table-label-";
 
     this.changesMade = false;
 
@@ -19,7 +19,7 @@ function TableMapManager(tableMapContainer, apiTablesUrl) {
 
         this.svgDragManager.addMoveCallback(function(evt, newXAttr, newYAttr) {
             const elem = $(evt.target);
-            const textElem = $("." + thisManager.TEXT_LABEL_PREFIX + elem.data("id"));
+            const textElem = $("." + thisManager.TEXT_LABEL_CLASS_PREFIX + elem.data("id"));
             thisManager.placeTextElem(elem, textElem, newXAttr, newYAttr);
         });
 
@@ -48,14 +48,7 @@ function TableMapManager(tableMapContainer, apiTablesUrl) {
             const tableCoord = { x: elem.attr("x"), y: elem.attr("y") };
             const tableDimen = { width: elem.attr("width"), height: elem.attr("height") };
 
-            let newTextElem = makeSVG("text", {
-                "x": 0, "y": 0, "data-id": tableId,
-                "class": thisManager.TEXT_LABEL_PREFIX + tableId.toString()
-            });
-            newTextElem = $(newTextElem);
-            newTextElem.text(tableId);
-            newTextElem = newTextElem.appendTo(thisManager.tableLabelGroup);
-
+            const newTextElem = thisManager.createLabelElem(tableId, elem.data("slug"));
             thisManager.placeTextElem(elem, newTextElem, tableCoord.x, tableCoord.y);
         });
     }
@@ -67,23 +60,54 @@ function TableMapManager(tableMapContainer, apiTablesUrl) {
     this.saveAddTable = function() {
         const form = $("#new-table-modal form");
         const formDom = form.get(0);
+        const thisManager = this;
 
         if (formDom.reportValidity()) {
             const formData = {
                 "x_coord": 50,
                 "y_coord": 50,
-                "width": 100,
-                "height": 100,
+                "width": 75,
+                "height": 75,
                 "color": 0xFFFFFF,
                 "name": $("#slug-field").val(),
                 "num_seats": $("#num-seats-field").val()
             };
 
+            formDom.reset();
+
             $.post(this.apiTablesUrl, formData, function(data) {
-                console.log("Success!");
-                console.log(data);
+                if (data.hasOwnProperty("id")) {
+                    console.log("Success!");
+                    console.log(data);
+                    thisManager.createTableElem(data);
+                } else {
+                    console.log("Returned data is invalid...");
+                }
             });
+
+            $('#new-table-modal').modal('hide');
         }
+    }
+
+    this.createTableElem = function(table) {
+        let newTableElem = $(makeSVG("rect", {
+            "x": table.x_coord, "y": table.y_coord, "data-id": table.id,
+            "width": table.width, "height": table.height,
+            "id": "table-" + table.id
+        }));
+        newTableElem = newTableElem.appendTo(this.tableGroup);
+
+        const newTextElem = this.createLabelElem(table.id, table.name);
+        this.placeTextElem(newTableElem, newTextElem, table.x_coord, table.y_coord);
+    }
+
+    this.createLabelElem = function(tableId, labelText) {
+        const newTextElem = $(makeSVG("text", {
+            "x": 0, "y": 0, "data-id": tableId,
+            "class": this.TEXT_LABEL_CLASS_PREFIX + tableId.toString()
+        }));
+        newTextElem.text(labelText);
+        return newTextElem.appendTo(this.tableLabelGroup);
     }
 
     this.placeTextElem = function(tableElem, textElem, tableX, tableY) {

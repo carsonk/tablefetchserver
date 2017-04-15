@@ -1,5 +1,6 @@
 
-function TableMapManager(tableMapContainer) {
+function TableMapManager(tableMapContainer, apiTablesUrl) {
+    this.apiTablesUrl = apiTablesUrl;
     this.mapContainer = $(tableMapContainer);
     this.tableGroup = this.mapContainer.children(".table-group");
     this.tableLabelGroup = this.mapContainer.children(".table-label-group");
@@ -8,6 +9,8 @@ function TableMapManager(tableMapContainer) {
     this.tables = [];
 
     this.TEXT_LABEL_PREFIX = "table-label-";
+
+    this.changesMade = false;
 
     this.initListeners = function() {
         const thisManager = this;
@@ -18,6 +21,18 @@ function TableMapManager(tableMapContainer) {
             const elem = $(evt.target);
             const textElem = $("." + thisManager.TEXT_LABEL_PREFIX + elem.data("id"));
             thisManager.placeTextElem(elem, textElem, newXAttr, newYAttr);
+        });
+
+        $(".new-table-btn").click(function() {
+            thisManager.openAddTableForm();
+        });
+
+        $(".table-save-btn").click(function() {
+            thisManager.saveAddTable();
+        });
+
+        $("#new-table-modal").on('hidden.bs.modal', function(e) {
+
         });
     }
 
@@ -45,12 +60,30 @@ function TableMapManager(tableMapContainer) {
         });
     }
 
-    this.addTable = function() {
-
+    this.openAddTableForm = function() {
+        $('#new-table-modal').modal('show');
     }
 
-    this.saveChanges = function() {
+    this.saveAddTable = function() {
+        const form = $("#new-table-modal form");
+        const formDom = form.get(0);
 
+        if (formDom.reportValidity()) {
+            const formData = {
+                "x_coord": 50,
+                "y_coord": 50,
+                "width": 100,
+                "height": 100,
+                "color": 0xFFFFFF,
+                "name": $("#slug-field").val(),
+                "num_seats": $("#num-seats-field").val()
+            };
+
+            $.post(this.apiTablesUrl, formData, function(data) {
+                console.log("Success!");
+                console.log(data);
+            });
+        }
     }
 
     this.placeTextElem = function(tableElem, textElem, tableX, tableY) {
@@ -59,8 +92,16 @@ function TableMapManager(tableMapContainer) {
         tableX = parseInt(tableX);
         tableY = parseInt(tableY);
 
+        if (typeof textElem == "undefined")
+            return;
+
+        const textElemDom = textElem.get(0);
+
+        if (typeof textElemDom == "undefined")
+            return;
+
         const textBBox = textElem.get(0).getBBox();
-        
+
         // TODO: Possible optimization might be to use BBox values instead.
         const tableWidth = parseInt(tableElem.attr("width"));
         const tableHeight = parseInt(tableElem.attr("height"));

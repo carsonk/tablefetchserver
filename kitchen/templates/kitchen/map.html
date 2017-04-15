@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="table-map-controls">
-
+    <button type="button" class="new-table-btn btn btn-primary">New Table</button>
 </div>
 
 <div class="table-map-div-wrapper">
@@ -18,9 +18,38 @@
     </g>
 
     <g class="table-label-group" style="font-size: 37;">
-
     </g>
 </svg>
+</div>
+
+<div class="modal fade" id="new-table-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New table</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="slug-field">Slug</label>
+                        <input type="text" name="name" class="form-control" id="slug-field" placeholder="Name your table" pattern="[\w-]+" required max="10" />
+                        <small id="slug-field-label" class="form-text text-muted">Must consist of letters, numbers, hyphens, and underscores.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="num-seats-field">Seat Count</label>
+                        <input type="number" name="num_seats" class="form-control" id="num-seats-field" placeholder="How many seats at this table?" required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="table-save-btn btn btn-primary" data-dismiss="modal">Save</button>
+                <button class="table-cancel-btn btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
@@ -39,9 +68,13 @@
 
 <script>
 
-const mapManager = new TableMapManager(".table-map-container");
+const apiTablesUrl = "{% url "table-list" %}";
+
+const mapManager = new TableMapManager(".table-map-container", apiTablesUrl);
 
 $(function() {
+    jqueryAjaxSetup();
+
     mapManager.initListeners();
     mapManager.collectInitialTables();
 });

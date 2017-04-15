@@ -9,7 +9,10 @@ from kitchen.forms.menu_item import MenuItemForm, MenuIngredientForm, MenuCatego
 from tablefetchserver import helpers
 
 def map(request):
+    tables = Table.objects.all()
+
     context = {
+        "tables": tables,
         "side_active": "map"
     }
     return render(request, "kitchen/map.html", context)

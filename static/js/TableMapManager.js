@@ -23,6 +23,14 @@ function TableMapManager(tableMapContainer, apiTablesUrl) {
             thisManager.placeTextElem(elem, textElem, newXAttr, newYAttr);
         });
 
+        this.svgDragManager.addDetachCallback(function(evt, selectedElem) {
+            const updateTable = {
+                x_coord: Math.round(selectedElem.attr("x")),
+                y_coord: Math.round(selectedElem.attr("y"))
+            };
+            thisManager.updateTable(selectedElem.data("id"), updateTable);
+        });
+
         $(".new-table-btn").click(function() {
             thisManager.openAddTableForm();
         });
@@ -87,6 +95,24 @@ function TableMapManager(tableMapContainer, apiTablesUrl) {
 
             $('#new-table-modal').modal('hide');
         }
+    }
+
+    this.updateTable = function(tableId, updateData) {
+        const url = this.apiTablesUrl + tableId + "/";
+
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "PATCH",
+            url: url,
+            data: JSON.stringify(updateData)
+        }).done(function(msg) {
+            console.log("Success!");
+        }).fail(function(jqXHR, textStatus) {
+            console.log("Connection failed: " + textStatus);
+        });
     }
 
     this.createTableElem = function(table) {

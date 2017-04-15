@@ -57,6 +57,7 @@ function SvgDragManager(jqContainer) {
     this.currentY = 0;
     this.currentMatrix = 0;
     this.moveCallback = 0;
+    this.detachCallback = 0;
 
     this.translateDimensions = function(x, y, callback) {
         this.svgPt.x = x;
@@ -77,6 +78,10 @@ function SvgDragManager(jqContainer) {
 
     this.addMoveCallback = function(handler) {
         this.moveCallback = handler;
+    }
+
+    this.addDetachCallback = function(handler) {
+        this.detachCallback = handler;
     }
 
     this.selectElement = function(evt) {
@@ -144,6 +149,10 @@ function SvgDragManager(jqContainer) {
 
             this.jqContainer.off("mousemove");
             this.jqContainer.off("mouseup");
+
+            if (this.detachCallback != 0) {
+                this.detachCallback(evt, this.selectedElement);
+            }
 
             this.selectedElement = 0;
         } else {

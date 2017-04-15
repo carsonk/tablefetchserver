@@ -12,9 +12,9 @@
 <svg class="table-map-container" style="width: 100%;" viewBox="0 0 1000 600">
 
     <g class="table-group" style="fill: white; stroke: black; stroke-width: 3;" >
-        <rect id="table-1" x="3" y="3" width="75" height="75" data-id="1" data-slug="A1" transform="matrix(1 0 0 1 0 0)" />
-        <rect id="table-2" x="110" y="3" width="75" height="75" data-id="2" data-slug="A2" transform="matrix(1 0 0 1 0 0)" />
-        <rect id="table-3" x="219" y="3" width="75" height="75" data-id="3" data-slug="A3" transform="matrix(1 0 0 1 0 0)" />
+        {% for table in tables %}
+            <rect id="table-{{table.id}}" x="{{table.x_coord}}" y="{{table.y_coord}}" width="{{table.width}}" height="{{table.height}}" data-id="{{table.id}}" data-slug="{{table.name}}" transform="matrix(1 0 0 1 0 0)" />
+        {% endfor %}
     </g>
 
     <g class="table-label-group" style="font-size: 37;">

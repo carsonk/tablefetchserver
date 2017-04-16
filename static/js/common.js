@@ -102,10 +102,10 @@ function SvgDragManager(jqContainer) {
             this.cursOffsetX = thisManager.currentX - xAttr;
             this.cursOffsetY = thisManager.currentY - yAttr;
 
-            this.jqContainer.on("mousemove", this.selectedElement, function(e) {
+            this.jqContainer.on("mousemove.svgDragMove", this.selectedElement, function(e) {
                 thisManager.moveElement(e);
             });
-            this.jqContainer.on("mouseup", this.selectedElement, function(e) {
+            this.jqContainer.on("mouseup.svgDragUp", this.selectedElement, function(e) {
                 thisManager.deselectElement(e);
             });
         } else {
@@ -147,8 +147,8 @@ function SvgDragManager(jqContainer) {
         if(this.selectedElement != 0){
             console.log("Detaching " + this.selectedElement.data("id"))
 
-            this.jqContainer.off("mousemove");
-            this.jqContainer.off("mouseup");
+            this.jqContainer.off("mousemove.svgDragMove");
+            this.jqContainer.off("mouseup.svgDragUp");
 
             if (this.detachCallback != 0) {
                 this.detachCallback(evt, this.selectedElement);

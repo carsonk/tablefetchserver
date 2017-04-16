@@ -1,21 +1,21 @@
 
-function TableMapManager(tableMapContainer, apiTablesUrl) {
-    this.apiTablesUrl = apiTablesUrl;
+function TableMapManager(tableMapContainer, apiTablesUrl, seatUrl, editUrl) {
     this.mapContainer = $(tableMapContainer);
+
+    this.seatUrl = seatUrl;
+    this.editUrl = editUrl;
+    this.apiTablesUrl = apiTablesUrl;
+
     this.tableGroup = this.mapContainer.children(".table-group");
     this.tableLabelGroup = this.mapContainer.children(".table-label-group");
     this.svgDragManager = new SvgDragManager(this.mapContainer);
 
-    this.tables = [];
-
     this.TEXT_LABEL_CLASS_PREFIX = "table-label-";
 
-    this.changesMade = false;
+    this.editMode = false;
 
     this.initListeners = function() {
         const thisManager = this;
-
-        this.svgDragManager.addListener(this.tableGroup, "rect");
 
         this.svgDragManager.addMoveCallback(function(evt, newXAttr, newYAttr) {
             const elem = $(evt.target);
@@ -31,17 +31,50 @@ function TableMapManager(tableMapContainer, apiTablesUrl) {
             thisManager.updateTable(selectedElem.data("id"), updateTable);
         });
 
-        $(".new-table-btn").click(function() {
-            thisManager.openAddTableForm();
-        });
-
-        $(".table-save-btn").click(function() {
-            thisManager.saveAddTable();
-        });
+        $(".new-table-btn").click(() => thisManager.openAddTableForm());
+        $(".switch-mode-btn").click(() => thisManager.toggleMode());
+        $(".table-save-btn").click(() => thisManager.saveAddTable());
 
         $("#new-table-modal").on('hidden.bs.modal', function(e) {
 
         });
+
+        window.onpopstate = function(e) {
+            if(e.state) {
+                if (e.state.mode == "edit") {
+                    thisManager.enterEditMode();
+                } else if (e.state.mode == "seat") {
+                    thisManager.enterSeatMode();
+                }
+            }
+        }
+    }
+
+    this.toggleMode = function() {
+        if(this.editMode)
+            this.enterSeatMode(); // Switch to seat mode.
+        else
+            this.enterEditMode(); // Switch to edit mode.
+    }
+
+    this.enterEditMode = function() {
+        const switchButton = $(".switch-mode-btn");
+        switchButton.text("Seat Mode");
+        this.editMode = true;
+        this.mapContainer.addClass("edit-map");
+        this.svgDragManager.addListener(this.tableGroup, "rect");
+        $(".new-table-btn").show();
+        window.history.pushState({"mode": "edit"}, "edit", this.editUrl);
+    }
+
+    this.enterSeatMode = function() {
+        const switchButton = $(".switch-mode-btn");
+        switchButton.text("Edit Mode");
+        this.editMode = false;
+        this.mapContainer.removeClass("edit-map");
+        this.svgDragManager.removeListeners(this.tableGroup, "rect");
+        $(".new-table-btn").hide();
+        window.history.pushState({"mode": "seat"}, "seat", this.seatUrl);
     }
 
     this.collectInitialTables = function() {
@@ -72,15 +105,11 @@ function TableMapManager(tableMapContainer, apiTablesUrl) {
 
         if (formDom.reportValidity()) {
             const formData = {
-                "x_coord": 50,
-                "y_coord": 50,
-                "width": 75,
-                "height": 75,
-                "color": 0xFFFFFF,
                 "name": $("#slug-field").val(),
-                "num_seats": $("#num-seats-field").val()
+                "x_coord": 50, "y_coord": 50,
+                "width": 75, "height": 75,
+                "color": 0xFFFFFF, "num_seats": $("#num-seats-field").val()
             };
-
             formDom.reset();
 
             $.post(this.apiTablesUrl, formData, function(data) {

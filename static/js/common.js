@@ -71,9 +71,13 @@ function SvgDragManager(jqContainer) {
     this.addListener = function(jqContainer, jqElem) {
         const thisManager = this;
 
-        $(jqContainer).on("mousedown", jqElem, function(e) {
+        $(jqContainer).on("mousedown.svgDragDown", jqElem, function(e) {
             thisManager.selectElement(e);
         });
+    }
+
+    this.removeListeners = function(jqContainer, jqElem) {
+        $(jqContainer).off("mousedown.svgDragDown");
     }
 
     this.addMoveCallback = function(handler) {

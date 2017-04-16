@@ -8,10 +8,11 @@ from api.models import MenuItem, MenuIngredient, MenuCategory, Table, TableMap
 from kitchen.forms.menu_item import MenuItemForm, MenuIngredientForm, MenuCategoryForm
 from tablefetchserver import helpers
 
-def map(request):
+def map(request, edit=False):
     tables = Table.objects.all()
 
     context = {
+        "edit": edit,
         "tables": tables,
         "side_active": "map"
     }

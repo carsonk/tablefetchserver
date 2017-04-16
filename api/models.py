@@ -16,7 +16,7 @@ class Table(models.Model):
     table_map = models.ForeignKey(TableMap, on_delete=models.CASCADE, null=True, blank=True)
     num_seats = models.PositiveSmallIntegerField()
 
-    name = models.SlugField(max_length=10)
+    name = models.SlugField(max_length=50)
 
     x_coord = models.IntegerField(default=50) # C-coord of corner on map.
     y_coord = models.IntegerField(default=50) # Y-coord of corner on map.
@@ -29,8 +29,8 @@ class Party(models.Model):
 
     table = models.ForeignKey(Table, on_delete=models.CASCADE, null=True, blank=True)
 
-    size = models.PositiveSmallIntegerField()
-    time_arrived = models.DateTimeField()
+    size = models.PositiveSmallIntegerField(null=True, blank=True, default=None)
+    time_arrived = models.DateTimeField(auto_now_add=True)
     time_seated = models.DateTimeField(null=True, blank=True, default=None)
     time_paid = models.DateTimeField(null=True, blank=True, default=None)
 
@@ -82,8 +82,8 @@ class Order(models.Model):
     party as a whole.
     """
 
-    party = models.ForeignKey(Party, on_delete=models.CASCADE)
-    party_member = models.ForeignKey(PartyMember, on_delete=models.CASCADE)
+    party = models.ForeignKey(Party, on_delete=models.CASCADE, null=True)
+    party_member = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True)
 
     time_placed = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)

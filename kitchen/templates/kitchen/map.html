@@ -11,15 +11,8 @@
 
 <div class="table-map-div-wrapper">
 <svg class="table-map-container{% if edit %} edit-map{% endif %}" style="width: 100%;" viewBox="0 0 1500 900">
-
-    <g class="table-group" style="fill: white; stroke: black; stroke-width: 3;" >
-        {% for table in tables %}
-            <rect id="table-{{table.id}}" x="{{table.x_coord}}" y="{{table.y_coord}}" width="{{table.width}}" height="{{table.height}}" data-id="{{table.id}}" data-slug="{{table.name}}" transform="matrix(1 0 0 1 0 0)" />
-        {% endfor %}
-    </g>
-
-    <g class="table-label-group" style="font-size: 37;">
-    </g>
+    <g class="table-group" style="" ></g>
+    <g class="table-label-group" style="font-size: 37;"></g>
 </svg>
 </div>
 
@@ -36,12 +29,11 @@
                 <form>
                     <div class="form-group">
                         <label for="slug-field">Slug</label>
-                        <input type="text" name="name" class="form-control" id="slug-field" placeholder="Name your table." pattern="[\w-]+" required max="10" />
-                        <small id="slug-field-label" class="form-text text-muted">Must consist of letters, numbers, hyphens, and underscores.</small>
+                        <input type="text" name="name" class="form-control" id="slug-field" placeholder="Give a short name for your table" required max="10" />
                     </div>
                     <div class="form-group">
-                        <label for="num-seats-field">Seat Count</label>
-                        <input type="number" name="num_seats" class="form-control" id="num-seats-field" placeholder="How many seats at this table?" required />
+                        <label for="party-size-field">Number of seats</label>
+                        <input type="number" name="size" class="form-control" id="party-size-field" placeholder="Number of chairs at table" value="4" required />
                     </div>
                 </form>
             </div>
@@ -53,14 +45,51 @@
     </div>
 </div>
 
+<div class="modal fade" id="new-party-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Seating <span id="new-party-table-slug"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="existing-party-form">
+                    <div class="form-group">
+                        <label for="existing-party">Existing Party</label>
+                        <select name="party" class="form-control" id="existing-party-list">
+                            <option value="0">Create new party</option>
+                        </select>
+                    </div>
+                </form>
+
+                <hr />
+                <div><strong>(OR)</strong></div>
+                <hr />
+
+                <form id="create-party-form">
+                    <div class="form-group">
+                        <label for="name-field">Name</label>
+                        <input type="text" name="name" class="form-control" id="name-field" placeholder="Name this party" required max="50" />
+                    </div>
+                    <div class="form-group">
+                        <label for="size-field">Size</label>
+                        <input type="number" name="size" class="form-control" id="size-field" placeholder="Size of party" required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="party-save-btn btn btn-primary">Save</button>
+                <button class="party-cancel-btn btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block templates %}
-
-        <text class="table-label-1" data-id="1" x="30" y="50">1</text>
-        <text class="table-label-2" data-id="2" x="137" y="50">2</text>
-        <text class="table-label-3" data-id="3" x="246" y="50">3</text>
-
 {% endblock %}
 
 {% block scripts %}
@@ -70,15 +99,18 @@
 <script>
 
 const apiTablesUrl = "{% url "table-list" %}";
+const apiPartiesUrl = "{% url "party-list" %}";
 const startEditMode = {% if edit %}true{% else %}false{% endif %};
 
 const seatUrl = "{% url "map" %}";
 const editUrl = "{% url "map_edit" %}";
 
-const mapManager = new TableMapManager(".table-map-container", apiTablesUrl, seatUrl, editUrl);
+const mapManager = new TableMapManager(".table-map-container", apiTablesUrl, apiPartiesUrl, seatUrl, editUrl);
 
 $(function() {
     jqueryAjaxSetup();
+
+    mapManager.loadAllTables();
 
     if (startEditMode)
         mapManager.enterEditMode();
@@ -86,7 +118,6 @@ $(function() {
         mapManager.enterSeatMode();
 
     mapManager.initListeners();
-    mapManager.collectInitialTables();
 });
 
 </script>

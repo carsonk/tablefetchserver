@@ -1,18 +1,22 @@
 
-function TableMapManager(tableMapContainer, apiTablesUrl, seatUrl, editUrl) {
+function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl, editUrl) {
     this.mapContainer = $(tableMapContainer);
 
     this.seatUrl = seatUrl;
     this.editUrl = editUrl;
     this.apiTablesUrl = apiTablesUrl;
+    this.apiPartiesUrl = apiPartiesUrl;
 
     this.tableGroup = this.mapContainer.children(".table-group");
     this.tableLabelGroup = this.mapContainer.children(".table-label-group");
     this.svgDragManager = new SvgDragManager(this.mapContainer);
 
-    this.TEXT_LABEL_CLASS_PREFIX = "table-label-";
+    this.tables = [];
+    this.parties = [];
 
     this.editMode = false;
+
+    this.TEXT_LABEL_CLASS_PREFIX = "table-label-";
 
     this.initListeners = function() {
         const thisManager = this;
@@ -34,10 +38,9 @@ function TableMapManager(tableMapContainer, apiTablesUrl, seatUrl, editUrl) {
         $(".new-table-btn").click(() => thisManager.openAddTableForm());
         $(".switch-mode-btn").click(() => thisManager.toggleMode());
         $(".table-save-btn").click(() => thisManager.saveAddTable());
+        $(".party-save-btn").click(() => thisManager.saveSeatedTable());
 
-        $("#new-table-modal").on('hidden.bs.modal', function(e) {
-
-        });
+        $(this.tableGroup).on("dblclick", "rect", (e) => thisManager.openSeatTable($(e.target)));
 
         window.onpopstate = function(e) {
             if(e.state) {
@@ -77,20 +80,19 @@ function TableMapManager(tableMapContainer, apiTablesUrl, seatUrl, editUrl) {
         window.history.pushState({"mode": "seat"}, "seat", this.seatUrl);
     }
 
-    this.collectInitialTables = function() {
+    this.loadAllTables = function() {
         const thisManager = this;
 
+        this.tableGroup.html("");
         this.tableLabelGroup.html("");
         const tableRects = this.tableGroup.children("rect");
 
-        tableRects.each(function(index) {
-            const elem = $(this);
-            const tableId = parseInt(elem.data("id"));
-            const tableCoord = { x: elem.attr("x"), y: elem.attr("y") };
-            const tableDimen = { width: elem.attr("width"), height: elem.attr("height") };
+        this.getTables(0, function(tables) {
+            thisManager.tables = tables;
 
-            const newTextElem = thisManager.createLabelElem(tableId, elem.data("slug"));
-            thisManager.placeTextElem(elem, newTextElem, tableCoord.x, tableCoord.y);
+            tables.forEach(function(table) {
+                thisManager.createTableElem(table);
+            })
         });
     }
 
@@ -126,7 +128,88 @@ function TableMapManager(tableMapContainer, apiTablesUrl, seatUrl, editUrl) {
         }
     }
 
-    this.updateTable = function(tableId, updateData) {
+    this.openSeatTable = function(tableElem) {
+        const thisManager = this;
+
+        this.getTable(tableElem.data("id"), function(table) {
+            const modal = $("#new-party-modal");
+            const partyList = $("#existing-party-list");
+            
+            modal.data("table", table.id);
+            $("#new-party-table-slug").text(table.name);
+            
+            partyList.html("");
+            thisManager.getParties(function(parties) {
+                $("<option />", { "value": 0 }).text("------------").appendTo(partyList);
+
+                thisManager.parties = parties;
+
+                parties.forEach(function(party) {
+                    const partyElem = $("<option />", { "value": party.id });
+                    const name = (party.name) ? 
+                        party.name 
+                        : "UNNAMED PARTY - Arrived " + party.time_arrived;
+                    partyElem.text(name);
+                    partyList.append(partyElem);
+                });
+
+                modal.modal('show');
+            });
+        });
+    }
+
+    this.saveSeatedTable = function() {
+        const modal = $("#new-party-modal");
+        const partyList = $("#existing-party-list");
+        const tableId = modal.data("table");
+        const thisManager = this;
+
+        const seatUpdate = function(partyId) {
+            thisManager.updateTable(partyId, { "current_party": partyId }, function() {
+                // Close the modal.
+                thisManager.loadAllTables();
+                modal.modal("hide");
+            });
+        };
+
+        const existingPartyVal = parseInt(partyList.val());
+        if(existingPartyVal > 0) {
+            // Existing party.
+            seatUpdate(existingPartyVal);
+        } else {
+            // New party.
+            // TODO: Do validation of these fields.
+            const party = {
+                "table": tableId,
+                "name": $("#name-field").val(),
+                "size": $("#size-field").val()
+            };
+
+            this.createParty(party, function(newParty) {
+                seatUpdate(newParty.id);
+            }, function() {
+                // TODO: Update with error.
+            });
+        }
+    }
+
+    this.getTables = function(mapId, callback) {
+        $.get(this.apiTablesUrl, {}, function(data) {
+            callback(data.results);
+        }, "json");
+    }
+
+    this.getTable = function(tableId, callback, failCallback) {
+        var getCall = $.get(this.apiTablesUrl + tableId, {}, function(data) {
+            callback(data);
+        }, "json");
+
+        if (failCallback) {
+            getCall.fail(failCallback);
+        }
+    }
+
+    this.updateTable = function(tableId, updateData, callback, failCallback) {
         const url = this.apiTablesUrl + tableId + "/";
 
         $.ajax({
@@ -137,21 +220,38 @@ function TableMapManager(tableMapContainer, apiTablesUrl, seatUrl, editUrl) {
             type: "PATCH",
             url: url,
             data: JSON.stringify(updateData)
-        }).done(function(msg) {
+        }).done(function(data) {
             console.log("Success!");
+
+            if (callback)
+                callback(data);
         }).fail(function(jqXHR, textStatus) {
             console.log("Connection failed: " + textStatus);
+
+            if (failCallback)
+                failCallback();
+        });
+    }
+
+    this.getParties = function(callback) {
+        $.get(this.apiPartiesUrl, {}, function(data) {
+            callback(data.results);
+        }, "json");
+    }
+
+    this.createParty = function(party, callback, failCallback) {
+        $.post(this.apiPartiesUrl, JSON.stringify(party), function(party) {
+            console.log("Created party.");
+            callback(party);
+        }, "json").fail(function(jqXHR, textStatus) {
+            console.log("Connection failed: " + textStatus);
+            failCallback();
         });
     }
 
     this.createTableElem = function(table) {
-        let newTableElem = $(makeSVG("rect", {
-            "x": table.x_coord, "y": table.y_coord, "data-id": table.id,
-            "width": table.width, "height": table.height,
-            "id": "table-" + table.id
-        }));
+        let newTableElem = $(makeSVG("rect", this.getTableElemAttributes(table)));
         newTableElem = newTableElem.appendTo(this.tableGroup);
-
         const newTextElem = this.createLabelElem(table.id, table.name);
         this.placeTextElem(newTableElem, newTextElem, table.x_coord, table.y_coord);
     }
@@ -163,6 +263,17 @@ function TableMapManager(tableMapContainer, apiTablesUrl, seatUrl, editUrl) {
         }));
         newTextElem.text(labelText);
         return newTextElem.appendTo(this.tableLabelGroup);
+    }
+
+    this.getTableElemAttributes = function(table) {
+        const elemClass = (table.current_party == null) ? null : "seated";
+
+        return {
+            "x": table.x_coord, "y": table.y_coord, "data-id": table.id,
+            "width": table.width, "height": table.height,
+            "id": "table-" + table.id,
+            "class": elemClass
+        };
     }
 
     this.placeTextElem = function(tableElem, textElem, tableX, tableY) {

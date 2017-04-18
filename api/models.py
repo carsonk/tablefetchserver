@@ -18,6 +18,8 @@ class Table(models.Model):
 
     name = models.SlugField(max_length=50)
 
+    current_party = models.OneToOneField('Party', on_delete=models.CASCADE, null=True, related_name='current_table')
+
     x_coord = models.IntegerField(default=50) # C-coord of corner on map.
     y_coord = models.IntegerField(default=50) # Y-coord of corner on map.
     width = models.IntegerField(default=100) # Width in pixels on map.
@@ -28,6 +30,8 @@ class Party(models.Model):
     """ A party of people sitting at a specified table. """
 
     table = models.ForeignKey(Table, on_delete=models.CASCADE, null=True, blank=True)
+
+    name = models.CharField(max_length=50, default="")
 
     size = models.PositiveSmallIntegerField(null=True, blank=True, default=None)
     time_arrived = models.DateTimeField(auto_now_add=True)

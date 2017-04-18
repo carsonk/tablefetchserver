@@ -20,12 +20,12 @@ class TableMapSerializer(serializers.ModelSerializer):
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
-        fields = ('id', 'table_map', 'name', 'num_seats', 'x_coord', 'y_coord', 'width', 'height', 'color')
+        fields = ('id', 'table_map', 'name', 'current_party', 'num_seats', 'x_coord', 'y_coord', 'width', 'height', 'color')
 
 class PartySerializer(serializers.ModelSerializer):
     class Meta:
         model = Party
-        fields = ('id', 'table', 'size', 'time_arrived', 'time_seated', 'time_paid')
+        fields = ('id', 'table', 'name', 'size', 'time_arrived', 'time_seated', 'time_paid')
 
 class PartyMemberSerializer(serializers.ModelSerializer):
     class Meta:

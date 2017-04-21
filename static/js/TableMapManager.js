@@ -51,7 +51,11 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
                     thisManager.enterEditMode();
                 } else if (e.state.mode == "seat") {
                     thisManager.enterSeatMode();
+                } else {
+                    console.log("Invalid state mode.");
                 }
+            } else {
+                console.log("no state");
             }
         }
     }
@@ -247,7 +251,7 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
         const url = this.apiTablesUrl + tableId + "/";
         ajaxPatch(url, updateData, callback, failCallback);
     }
-    
+
     this.getParties = function(callback) {
         $.get(this.apiPartiesUrl, {}, function(data) {
             callback(data.results);

@@ -41,6 +41,28 @@ function makeSVG(tag, attrs) {
     return el;
 }
 
+function ajaxPatch(url, dataObj, callback, failCallback) {
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "PATCH",
+        url: url,
+        data: JSON.stringify(dataObj)
+    }).done(function(data) {
+        console.log("Success!");
+
+        if (callback)
+            callback(data);
+    }).fail(function(jqXHR, textStatus) {
+        console.log("Connection failed: " + textStatus);
+
+        if (failCallback)
+            failCallback();
+    });
+}
+
 function SvgDragManager(jqContainer) {
     /* TODO: Consider using DOM elements instead of jQuery, since there are some parts of
      * jQuery that aren't guaranteed to work with SVG. */

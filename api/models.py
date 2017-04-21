@@ -26,6 +26,9 @@ class Table(models.Model):
     height = models.IntegerField(default=100) # Height in pixels on map.
     color = models.IntegerField(default=0xFFFFFF) # 32-bit RGB hexcolor.
 
+    def __str__(self):
+        return self.name
+
 class Party(models.Model):
     """ A party of people sitting at a specified table. """
 
@@ -33,10 +36,13 @@ class Party(models.Model):
 
     name = models.CharField(max_length=50, default="")
 
-    size = models.PositiveSmallIntegerField(null=True, blank=True, default=None)
+    size = models.PositiveSmallIntegerField(null=True, blank=True, default=2)
     time_arrived = models.DateTimeField(auto_now_add=True)
     time_seated = models.DateTimeField(null=True, blank=True, default=None)
     time_paid = models.DateTimeField(null=True, blank=True, default=None)
+
+    def __str__(self):
+        return self.name
 
 class PartyMember(models.Model):
     """ An individual member of a party. """

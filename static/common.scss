@@ -266,6 +266,7 @@ button {
 }
 
 .table-map-container {
+
     .table-group rect {
         cursor: pointer;
         fill: #b4ffad;
@@ -285,6 +286,11 @@ button {
 
     .table-label-group text {
         pointer-events: none;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+           -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none;
     }
 }
 

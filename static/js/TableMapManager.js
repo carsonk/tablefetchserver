@@ -39,8 +39,11 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
         $(".switch-mode-btn").click(() => thisManager.toggleMode());
         $(".table-save-btn").click(() => thisManager.saveAddTable());
         $(".party-save-btn").click(() => thisManager.saveSeatedTable());
+        $("#currently-seated-remove").click(() => thisManager.clearSeatedTable());
 
-        $(this.tableGroup).on("dblclick", "rect", (e) => thisManager.openSeatTable($(e.target)));
+        $(this.tableGroup).on("click", "rect", function(e) {
+            thisManager.openSeatTable($(e.target))
+        });
 
         window.onpopstate = function(e) {
             if(e.state) {
@@ -129,27 +132,44 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
     }
 
     this.openSeatTable = function(tableElem) {
+        if (this.editMode)
+            return;
+
         const thisManager = this;
 
         this.getTable(tableElem.data("id"), function(table) {
             const modal = $("#new-party-modal");
             const partyList = $("#existing-party-list");
-            
+
             modal.data("table", table.id);
+            modal.data("current-party", table.current_party);
             $("#new-party-table-slug").text(table.name);
-            
+
+            if (table.current_party) {
+                $("#currently-seated").show();
+            } else {
+                $("#currently-seated").hide();
+            }
+
             partyList.html("");
             thisManager.getParties(function(parties) {
+
                 $("<option />", { "value": 0 }).text("------------").appendTo(partyList);
 
                 thisManager.parties = parties;
 
                 parties.forEach(function(party) {
                     const partyElem = $("<option />", { "value": party.id });
-                    const name = (party.name) ? 
-                        party.name 
+                    const name = (party.name) ?
+                        party.name
                         : "UNNAMED PARTY - Arrived " + party.time_arrived;
                     partyElem.text(name);
+
+                    if (party.id == table.current_party) {
+                        partyElem.attr("selected", true);
+                        $("#currently-seated-name").text(party.name);
+                    }
+
                     partyList.append(partyElem);
                 });
 
@@ -165,10 +185,12 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
         const thisManager = this;
 
         const seatUpdate = function(partyId) {
-            thisManager.updateTable(partyId, { "current_party": partyId }, function() {
+            thisManager.updateTable(tableId, { "current_party": partyId }, function() {
                 // Close the modal.
-                thisManager.loadAllTables();
-                modal.modal("hide");
+                thisManager.updateParty(partyId, { "table": tableId }, function() {
+                    thisManager.loadAllTables();
+                    modal.modal("hide");
+                });
             });
         };
 
@@ -193,6 +215,18 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
         }
     }
 
+    this.clearSeatedTable = function() {
+        const modal = $("#new-party-modal");
+        const tableId = modal.data("table");
+        const partyId = modal.data("current-party");
+        const thisManager = this;
+
+        this.updateTable(tableId, { "current_party": null }, function() {
+            thisManager.loadAllTables();
+            modal.modal("hide");
+        });
+    }
+
     this.getTables = function(mapId, callback) {
         $.get(this.apiTablesUrl, {}, function(data) {
             callback(data.results);
@@ -211,28 +245,9 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
 
     this.updateTable = function(tableId, updateData, callback, failCallback) {
         const url = this.apiTablesUrl + tableId + "/";
-
-        $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            type: "PATCH",
-            url: url,
-            data: JSON.stringify(updateData)
-        }).done(function(data) {
-            console.log("Success!");
-
-            if (callback)
-                callback(data);
-        }).fail(function(jqXHR, textStatus) {
-            console.log("Connection failed: " + textStatus);
-
-            if (failCallback)
-                failCallback();
-        });
+        ajaxPatch(url, updateData, callback, failCallback);
     }
-
+    
     this.getParties = function(callback) {
         $.get(this.apiPartiesUrl, {}, function(data) {
             callback(data.results);
@@ -247,6 +262,11 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
             console.log("Connection failed: " + textStatus);
             failCallback();
         });
+    }
+
+    this.updateParty = function(partyId, updateData, callback, failCallback) {
+        const url = this.apiPartiesUrl + partyId + "/";
+        ajaxPatch(url, updateData, callback, failCallback);
     }
 
     this.createTableElem = function(table) {
@@ -266,12 +286,12 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
     }
 
     this.getTableElemAttributes = function(table) {
-        const elemClass = (table.current_party == null) ? null : "seated";
+        const elemClass = (table.current_party == null) ? "" : "seated";
 
         return {
             "x": table.x_coord, "y": table.y_coord, "data-id": table.id,
             "width": table.width, "height": table.height,
-            "id": "table-" + table.id,
+            "id": "table-" + table.id, "data-party": table.current_party,
             "class": elemClass
         };
     }

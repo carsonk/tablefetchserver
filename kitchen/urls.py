@@ -15,6 +15,8 @@ urlpatterns = [
      url(r'^menu/category/edit/(?P<edit>\d+)?$', views.menu_category_create,
          name='menu_category_edit'),
      url(r'^menu/ingredient/create$', views.menu_ingredient_create, name='menu_ingredient_create'),
-     url(r'menu/ingredient/edit/(?P<edit>\d+)?$', views.menu_ingredient_create,
+     url(r'^menu/ingredient/edit/(?P<edit>\d+)?$', views.menu_ingredient_create,
          name='menu_ingredient_edit'),
+     url(r'^party/create$', views.party_create, name='party_create'),
+     url(r'^party/edit/(?P<edit>\d+)?$', views.party_create, name='party_edit')
 ]

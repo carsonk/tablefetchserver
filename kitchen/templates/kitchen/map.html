@@ -6,6 +6,7 @@
 
 <div class="table-map-controls">
     <button type="button" class="switch-mode-btn btn btn-secondary"></button>
+    <a href="{% url "party_create" %}" class="btn btn-primary">New Party</a>
     <button type="button" class="new-table-btn btn btn-primary">New Table</button>
 </div>
 
@@ -55,6 +56,14 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div id="currently-seated" style="display: none; text-align: center;">
+                    <strong>Currently Seated: <span id="currently-seated-name"></span></strong>
+                    <div>
+                        <button type="button" id="currently-seated-remove" class="btn btn-danger">Unseat</button>
+                    </div>
+                    <hr />
+                </div>
+
                 <form id="existing-party-form">
                     <div class="form-group">
                         <label for="existing-party">Existing Party</label>

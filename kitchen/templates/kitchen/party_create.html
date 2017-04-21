@@ -1,0 +1,25 @@
+{% extends "kitchen/dashboard_base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% if item %}
+    <h3>Editing Party: {{ party.name }}</h3>
+{% else %}
+    <h3>New Party</h3>
+{% endif %}
+
+<br />
+
+{% if success %}
+    <div class="alert alert-success" role="alert">
+        <strong>Awesome!</strong> Your new item was created.
+    </div>
+{% endif %}
+
+{% csrf_token %}
+
+{% crispy form %}
+
+{% endblock %}

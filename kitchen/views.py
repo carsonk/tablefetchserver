@@ -4,8 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from api.models import MenuItem, MenuIngredient, MenuCategory, Table, TableMap
+from api.models import MenuItem, MenuIngredient, MenuCategory, Table, TableMap, Party, PartyMember
 from kitchen.forms.menu_item import MenuItemForm, MenuIngredientForm, MenuCategoryForm
+from kitchen.forms.party import PartyForm, PartyMemberForm
 from tablefetchserver import helpers
 
 def map(request, edit=False):
@@ -101,3 +102,14 @@ def menu_create(request, edit=None):
         "form": form
     }
     return render(request, "kitchen/menu_create.html", context)
+
+def party_create(request, edit=None):
+    (success, party, form) = helpers.construct_model_form(PartyForm, Party, request, edit)
+
+    context = {
+        "party": party,
+        "side_active": "parties",
+        "success": success,
+        "form": form
+    }
+    return render(request, "kitchen/party_create.html", context)

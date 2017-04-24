@@ -36,13 +36,14 @@ INSTALLED_APPS = [
     'djangobower',
     'rest_framework',
     'crispy_forms',
+    'static_precompiler',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'static_precompiler',
 ]
 
 MIDDLEWARE = [
@@ -135,6 +136,18 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'out', 'static')
 
+# Channels
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+        "ROUTING": "tablefetchserver.routing.channel_routing",
+    },
+}
+
 # Static Precompiler
 
 STATIC_PRECOMPILER_COMPILERS = (
@@ -147,7 +160,7 @@ STATIC_PRECOMPILER_COMPILERS = (
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASS': ('rest_framework.permissions.SessionAuthentication',),
-    'PAGE_SIZE': 20 
+    'PAGE_SIZE': 20
 }
 
 

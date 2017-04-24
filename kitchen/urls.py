@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
      url(r'^$', views.orders),
+     url(r'^login$', views.login),
      url(r'^map$', views.map, name='map'),
      url(r'^map/edit$', views.map, {'edit': True}, name='map_edit'),
      url(r'^orders$', views.orders, name='orders'),

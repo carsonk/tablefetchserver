@@ -1,2 +1,46 @@
 @import "variables";
 
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #4717F6;
+    height: 100%;
+    width: 100%;
+    background: rgba(71,23,246,1);
+    background: -moz-linear-gradient(left, rgba(71,23,246,1) 0%, rgba(109,28,153,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(71,23,246,1)), color-stop(100%, rgba(109,28,153,1)));
+    background: -webkit-linear-gradient(left, rgba(71,23,246,1) 0%, rgba(109,28,153,1) 100%);
+    background: -o-linear-gradient(left, rgba(71,23,246,1) 0%, rgba(109,28,153,1) 100%);
+    background: -ms-linear-gradient(left, rgba(71,23,246,1) 0%, rgba(109,28,153,1) 100%);
+    background: linear-gradient(to right, rgba(71,23,246,1) 0%, rgba(109,28,153,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4717f6', endColorstr='#6d1c99', GradientType=1 );
+}
+
+.page-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.login-container {
+    background-color: #E7DFDD;
+    padding: 2rem;
+    box-shadow: 2px 4px 15px 1px rgba(0,0,0,0.22);
+    
+    input, button {
+        font-size: 1.5rem;
+    }
+
+    button {
+        font-size: 1.2rem;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+}
+

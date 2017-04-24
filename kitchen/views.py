@@ -1,4 +1,5 @@
 from crispy_forms.helper import FormHelper
+from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -8,6 +9,10 @@ from api.models import MenuItem, MenuIngredient, MenuCategory, Table, TableMap, 
 from kitchen.forms.menu_item import MenuItemForm, MenuIngredientForm, MenuCategoryForm
 from kitchen.forms.party import PartyForm, PartyMemberForm
 from tablefetchserver import helpers
+
+def login(request):
+    context = {}
+    return render(request, "kitchen/login.html", context)
 
 def map(request, edit=False):
     tables = Table.objects.all()

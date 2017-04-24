@@ -1,0 +1,162 @@
+@import "variables";
+
+.order-controls {
+}
+
+.orders-list {
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flew-flow: row wrap;
+    list-style: none;
+
+    padding: 0;
+    margin: 10px 0 10px 0;
+
+    .order {
+        margin: 0 10px 10px 0;
+    }
+}
+
+#create-order-form {
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #fdfdfd;
+
+    .party-member-container {
+        a, label, a:hover {
+            margin-bottom: .5rem;
+            font-weight: bold;
+            vertical-align: middle;
+            font-size: 1.5rem;
+            padding: 20px 25px;
+        }
+    }
+
+    .order-select-items {
+        padding-left: 15px;
+
+        .order-select-breadcrumbs {
+            list-style: none;
+            padding: 0;
+
+            li {
+                display: inline-block;
+                padding: 6px 9px;
+                cursor: pointer;
+            }
+        }
+
+        .menu-select-list {
+            list-style: none;
+            list-style-position: outside;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+
+            li {
+                padding: 10px 25px;
+                margin: 0 5px 5px 0;
+                cursor: pointer;
+                transition: background-color $hover-trans-time;
+                color: #555;
+                border-radius: .25rem;
+            }
+
+            .menu-select-category {
+                border: solid 1px #AAA;
+                background-color: #EEE;
+            }
+
+            .menu-select-category:hover {
+                background-color: darken(#EEE, 5%);
+            }
+
+            .menu-select-item {
+                border: solid 1px #AAA;
+            }
+
+            .menu-select-item:hover {
+                background-color: darken(#FFF, 5%);
+            }
+        }
+
+        .order-selected-items {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+
+            > li {
+                border: thin solid #AAA;
+                border-radius: .25rem;
+                padding: 10px;
+                margin: 0 10px 10px 0;
+            }
+
+            .order-selected-body {
+                padding-bottom: 5px;
+            }
+
+            .selected-title {
+                font-size: 18px;
+                padding-top: 5px;
+            }
+
+            .selected-tools {
+                margin-left: 10px;
+
+                button {
+                    font-size: 15px;
+                    padding: 5px 8px;
+                    font-weight: bold;
+                }
+            }
+
+            .order-selected-ingredients {
+                border-top: thin solid #DDD;
+                list-style: none;
+                margin: 0;
+                padding: 5px 0;
+                list-style-position: inside;
+                display: none;
+
+                .order-action {
+                    font-weight: bold;
+                }
+
+                .order-selected-add {
+                    .order-action {
+                        color: green;
+                    }
+                }
+
+                .order-selected-remove {
+                    .order-action {
+                        color: red;
+                    }
+                }
+            }
+
+            .order-selected-footer {
+                border-top: thin solid #DDD;
+                padding-top: 5px;
+
+                .ingredients-btn {
+                    padding: 5px;
+                    float: right;
+                    font-size: .75rem;
+                }
+
+                .order-selected-price {
+                    color: #AAA;
+                    font-size: 1.3rem;
+                    float: left;
+                }
+            }
+        }
+    }
+}
+

@@ -11,6 +11,8 @@
 
     <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel='stylesheet' type='text/css'>
     <link href="{% static 'common.scss'|compile %}" rel="stylesheet" type="text/css" />
+    {% block cssincludes %}
+    {% endblock %}
 </head>
 <body>
     <div class="container-fluid">

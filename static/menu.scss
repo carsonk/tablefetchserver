@@ -1,0 +1,55 @@
+@import "variables";
+
+.menu-controls {
+    .menu-breadcrumbs {
+        margin-left: 10px;
+    }
+}
+
+#menu-items {
+    padding: 0 10px;
+
+    .menu-item-container {
+        padding: 5px;
+
+        h4 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+            color: #666;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .menu-category-card, .menu-item-card {
+            transition: background-color $hover-trans-time, border-color $hover-trans-time;
+        }
+
+        .menu-category-card {
+            background-color: #FFF;
+        }
+
+        .menu-category-card:hover, .menu-item-card:hover {
+            background-color: darken(#FFF, 4%);
+        }
+    }
+}
+
+
+#ingredients-selector-modal {
+    .modal-body label {
+        margin-right: 5px;
+    }
+}
+
+.ingredient-page-list {
+  .ingredient-title {
+  }
+
+  td, th {
+    border: thin solid #333;
+  }
+}
+

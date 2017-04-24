@@ -2,6 +2,10 @@
 
 {% load crispy_forms_tags %}
 
+{% block cssincludes %}
+<link href="{% static 'menu.scss'|compile %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block content %}
 
 {% if item %}

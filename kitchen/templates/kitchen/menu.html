@@ -1,5 +1,12 @@
 {% extends "kitchen/dashboard_base.html" %}
 
+{% load compile_static %}
+{% load static %}
+
+{% block cssincludes %}
+<link href="{% static 'menu.scss'|compile %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block content %}
 
 <div class="menu-controls">

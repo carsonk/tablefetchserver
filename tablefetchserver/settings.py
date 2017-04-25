@@ -105,6 +105,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = '/kitchen/login'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
@@ -147,7 +149,7 @@ STATIC_PRECOMPILER_COMPILERS = (
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASS': ('rest_framework.permissions.SessionAuthentication',),
-    'PAGE_SIZE': 20 
+    'PAGE_SIZE': 20
 }
 
 

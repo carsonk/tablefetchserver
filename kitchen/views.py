@@ -1,6 +1,6 @@
 from crispy_forms.helper import FormHelper
-from django.contrib.auth import authenticate
-from django.shortcuts import get_object_or_404, render
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -11,8 +11,29 @@ from kitchen.forms.party import PartyForm, PartyMemberForm
 from tablefetchserver import helpers
 
 def login(request):
-    context = {}
+    if request.user.is_authenticated:
+        return redirect("map")
+
+    context = {"error": None, "username": ""}
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None and user.is_active:
+            auth_login(request, user)
+            return redirect("map")
+        else:
+            context = {
+                "error": "Could not validate those credentials!",
+                "username": username
+            }
+
     return render(request, "kitchen/login.html", context)
+
+def logout(request):
+    auth_logout(request)
+    return redirect("login")
 
 def map(request, edit=False):
     tables = Table.objects.all()

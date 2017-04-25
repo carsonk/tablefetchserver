@@ -1,5 +1,6 @@
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -22,7 +23,7 @@ def login(request):
 
         if user is not None and user.is_active:
             auth_login(request, user)
-            return redirect("map")
+            return redirect(request.GET.get("next") or "map")
         else:
             context = {
                 "error": "Could not validate those credentials!",
@@ -35,6 +36,7 @@ def logout(request):
     auth_logout(request)
     return redirect("login")
 
+@login_required()
 def map(request, edit=False):
     tables = Table.objects.all()
 
@@ -45,18 +47,21 @@ def map(request, edit=False):
     }
     return render(request, "kitchen/map.html", context)
 
+@login_required()
 def orders(request):
     context = {
         "side_active": "orders"
     }
     return render(request, "kitchen/orders.html", context)
 
+@login_required()
 def orders_create(request):
     context = {
         "side_active": "orders"
     }
     return render(request, "kitchen/orders_create.html", context)
 
+@login_required()
 def menu(request, category_id=None):
     breadcrumbs = []
 
@@ -88,6 +93,7 @@ def menu(request, category_id=None):
     }
     return render(request, "kitchen/menu.html", context)
 
+@login_required()
 def menu_ingredients(request):
     ingredients = MenuIngredient.objects.all()
     context = {
@@ -96,6 +102,7 @@ def menu_ingredients(request):
     }
     return render(request, "kitchen/menu_ingredients.html", context)
 
+@login_required()
 def menu_category_create(request, edit=None):
     (success, category, form) = helpers.construct_model_form(MenuCategoryForm, MenuCategory, request, edit)
 
@@ -107,6 +114,7 @@ def menu_category_create(request, edit=None):
     }
     return render(request, "kitchen/menu_category_create.html", context)
 
+@login_required()
 def menu_ingredient_create(request, edit=None):
     (success, ingredient, form) = helpers.construct_model_form(MenuIngredientForm, MenuIngredient, request, edit)
 
@@ -118,6 +126,7 @@ def menu_ingredient_create(request, edit=None):
     }
     return render(request, "kitchen/menu_ingredient_create.html", context)
 
+@login_required()
 def menu_create(request, edit=None):
     (success, item, form) = helpers.construct_model_form(MenuItemForm, MenuItem, request, edit)
 
@@ -129,6 +138,7 @@ def menu_create(request, edit=None):
     }
     return render(request, "kitchen/menu_create.html", context)
 
+@login_required()
 def party_create(request, edit=None):
     (success, party, form) = helpers.construct_model_form(PartyForm, Party, request, edit)
 

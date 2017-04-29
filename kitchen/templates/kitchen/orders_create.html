@@ -16,10 +16,13 @@
         <label>Party</label>
         <select name="party" class="form-control">
             <option value="0">New Party</option>
+            {% for party in parties %}
+                <option value="{{party.id}}">{{party.name}}</option>
+            {% endfor %}
         </select>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="display: none;">
         <label>Party Member</label>
         <div class="party-member-container">
             <span id="party-member-list" data-toggle="buttons">

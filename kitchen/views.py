@@ -56,7 +56,10 @@ def orders(request):
 
 @login_required()
 def orders_create(request):
+    parties = Party.objects.filter(time_paid=None)
+
     context = {
+        "parties": parties,
         "side_active": "orders"
     }
     return render(request, "kitchen/orders_create.html", context)

@@ -36,17 +36,9 @@ def submit_order(request):
         except Party.DoesNotExist:
             return get_json_404("That party does not exist.")
 
-    is_new_member = False
-    if data["member"] == 0 or data["party"] == 0:
-        member = PartyMember.objects.create(party=party)
-        is_new_member = True
-    else:
-        try:
-            member = PartyMember.objects.get(pk=int(data["member"]))
-        except PartyMember.DoesNotExist:
-            if is_new_party:
-                party.delete()
-            return get_json_404("That party member did not exist.")
+    # TODO: Eventually we want to be able to have separate party members.
+    member = PartyMember.objects.create(party=party)
+    is_new_member = True
 
     order = Order.objects.create(party=party, party_member=member)
 

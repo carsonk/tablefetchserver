@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from api.models import MenuItem, MenuIngredient, MenuCategory, Table, TableMap, Party, PartyMember
+from api.models import MenuItem, MenuIngredient, MenuCategory, Order, Table, TableMap, Party, PartyMember
 from kitchen.forms.menu_item import MenuItemForm, MenuIngredientForm, MenuCategoryForm
 from kitchen.forms.party import PartyForm, PartyMemberForm
 from tablefetchserver import helpers
@@ -49,7 +49,10 @@ def map(request, edit=False):
 
 @login_required()
 def orders(request):
+    orders = Order.objects.filter(time_finished=None)
+
     context = {
+        "orders": orders,
         "side_active": "orders"
     }
     return render(request, "kitchen/orders.html", context)

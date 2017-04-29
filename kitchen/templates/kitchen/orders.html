@@ -14,21 +14,33 @@
 </div>
 
 <ol class="orders-list">
-    {% for i in "xxxxx" %}
+    {% for order in orders %}
     <li class="card order" id="order-499394">
         <div class="card-block order-body">
-            <h5 class="card-title">499394</h5>
+            <h5 class="card-title">
+                {{order.party.table.name}} - {{order.party.name}} 
+                <span class="text-muted">(#{{order.id}})</span>
+            </h5>
             <div class="card-text">
                 <ul class="order-item-list">
-                    <li>Blueberry Pancakes
+                    {% for item in order.ordermenuitem_set.all %}
+                    <li>{{item.menu_item.name}}
+                        {% if item.add_ingredients.count > 0 %}
                         <ul class="order-additions">
-                            <li><span class="order-action-verb">ADD</span> powdered sugar</li>
-                            <li><span class="order-action-verb">ADD</span> lemon syrup</li>
+                            {% for add_ingredient in item.add_ingredients.all %}
+                            <li><span class="order-action-verb">ADD</span> {{add_ingredient.name}}</li>
+                            {% endfor %}
                         </ul>
+                        {% endif %}
+                        {% if item.remove_ingredients.count > 0 %}
                         <ul class="order-removals">
-                            <li><span class="order-action-verb">REMOVE</span> honey syrup</li>
+                            {% for remove_ingredient in item.remove_ingredients.all %}
+                            <li><span class="order-action-verb">ADD</span> {{remove_ingredient.name}}</li>
+                            {% endfor %}
                         </ul>
+                        {% endif %}
                     </li>
+                    {% endfor %}
                 </ul>
 
                 <div class="order-controls">

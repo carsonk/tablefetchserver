@@ -48,9 +48,9 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
         window.onpopstate = function(e) {
             if(e.state) {
                 if (e.state.mode == "edit") {
-                    thisManager.enterEditMode();
+                    thisManager.enterEditMode(true);
                 } else if (e.state.mode == "seat") {
-                    thisManager.enterSeatMode();
+                    thisManager.enterSeatMode(true);
                 } else {
                     console.log("Invalid state mode.");
                 }
@@ -67,24 +67,30 @@ function TableMapManager(tableMapContainer, apiTablesUrl, apiPartiesUrl, seatUrl
             this.enterEditMode(); // Switch to edit mode.
     }
 
-    this.enterEditMode = function() {
+    this.enterEditMode = function(backInto) {
         const switchButton = $(".switch-mode-btn");
         switchButton.text("Seat Mode");
         this.editMode = true;
         this.mapContainer.addClass("edit-map");
         this.svgDragManager.addListener(this.tableGroup, "rect");
         $(".new-table-btn").show();
-        window.history.pushState({"mode": "edit"}, "edit", this.editUrl);
+        $(".table-map-title").text("Edit Map");
+
+        if (!backInto)
+          window.history.pushState({"mode": "edit"}, "edit", this.editUrl);
     }
 
-    this.enterSeatMode = function() {
+    this.enterSeatMode = function(backInto) {
         const switchButton = $(".switch-mode-btn");
         switchButton.text("Edit Mode");
         this.editMode = false;
         this.mapContainer.removeClass("edit-map");
         this.svgDragManager.removeListeners(this.tableGroup, "rect");
         $(".new-table-btn").hide();
-        window.history.pushState({"mode": "seat"}, "seat", this.seatUrl);
+        $(".table-map-title").text("Map");
+
+        if (!backInto)
+          window.history.pushState({"mode": "seat"}, "seat", this.seatUrl);
     }
 
     this.loadAllTables = function() {

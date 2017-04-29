@@ -35,7 +35,7 @@
                         {% if item.remove_ingredients.count > 0 %}
                         <ul class="order-removals">
                             {% for remove_ingredient in item.remove_ingredients.all %}
-                            <li><span class="order-action-verb">ADD</span> {{remove_ingredient.name}}</li>
+                            <li><span class="order-action-verb">REMOVE</span> {{remove_ingredient.name}}</li>
                             {% endfor %}
                         </ul>
                         {% endif %}

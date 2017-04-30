@@ -25,6 +25,7 @@
 
         .menu-category-card, .menu-item-card {
             transition: background-color $hover-trans-time, border-color $hover-trans-time;
+            background-color: #e8f1f7;
         }
 
         .menu-category-card {

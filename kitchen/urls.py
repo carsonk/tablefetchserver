@@ -9,6 +9,7 @@ urlpatterns = [
      url(r'^map/edit$', views.map, {'edit': True}, name='map_edit'),
      url(r'^orders$', views.orders, name='orders'),
      url(r'^orders/create$', views.orders_create, name='orders_create'),
+     url(r'^orders/clear/(?P<order_id>\d+)?$', views.orders_clear, name='orders_clear'),
      url(r'^menu/(?P<category_id>\d+)?$', views.menu, name='menu'),
      url(r'^menu/ingredients$', views.menu_ingredients, name='menu_ingredients'),
      url(r'^menu/create$', views.menu_create, name='menu_create'),

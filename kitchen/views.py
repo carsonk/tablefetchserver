@@ -1,4 +1,5 @@
 from crispy_forms.helper import FormHelper
+from datetime import datetime
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
@@ -56,6 +57,13 @@ def orders(request):
         "side_active": "orders"
     }
     return render(request, "kitchen/orders.html", context)
+
+@login_required()
+def orders_clear(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    order.time_finished = datetime.now()
+    order.save()
+    return redirect("orders")
 
 @login_required()
 def orders_create(request):

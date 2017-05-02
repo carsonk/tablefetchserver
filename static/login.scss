@@ -5,21 +5,11 @@ html {
 }
 
 body {
-    background-color: #4717F6;
     height: 100%;
     width: 100%;
-    background: rgba(71,23,246,1);
 
-    background: linear-gradient(146deg, #3915bf, #ffffff);
-    background-size: 400% 400%;
-
-    animation: LoginBgFade 20s linear infinite;
-
-    @keyframes LoginBgFade {
-        0%{background-position:17% 0%; background-size: 400% 400%;}
-        50%{background-position:84% 100%; background-size: 400% 400%;}
-        100%{background-position:17% 0%;  background-size: 400% 400%;}
-    }
+    background: #292b2c;
+    background-size: 100% 100%;
 }
 
 .page-content {
@@ -48,10 +38,11 @@ body {
         margin-bottom: .5em;
         border-bottom: thin solid rgba(255,255,255,.4);
         padding-bottom: .35em;
+        font-size: 1.25rem;
     }
 
     .login-box {
-        background-color: rgba(0, 0, 0, 0.63);
+        background-color: rgba(13, 21, 43, 0.63);
         padding: 2rem;
         box-shadow: 2px 4px 15px 1px rgba(0,0,0,0.22);
     }

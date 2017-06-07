@@ -43,6 +43,7 @@ class MenuIngredientSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'description')
 
 class MenuItemSerializer(serializers.ModelSerializer):
+    category = MenuCategorySerializer(many=True, read_only=True)
     possible_ingredients = MenuIngredientSerializer(many=True, read_only=True)
     default_ingredients = MenuIngredientSerializer(many=True, read_only=True)
 

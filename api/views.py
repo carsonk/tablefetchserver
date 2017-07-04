@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404, render
 from django.http import Http404, JsonResponse
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 import json
 
 from api.models import MenuItem, MenuIngredient, Order, OrderMenuItem, Party, PartyMember
@@ -11,6 +13,7 @@ from api.models import MenuItem, MenuIngredient, Order, OrderMenuItem, Party, Pa
 def get_json_404(message):
     return JsonResponse({'message': message, 'success': False}, status=404)
 
+@csrf_exempt
 def submit_order(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'message': 'Must use POST request.'})
@@ -25,8 +28,8 @@ def submit_order(request):
     is_new_party = False
     if data["party"] == 0:
         party = Party()
-        party.time_arrived = datetime.datetime.now()
-        party.time_seated = datetime.datetime.now()
+        party.time_arrived = timezone.now()
+        party.time_seated = timezone.now()
         party.size = 1 # TODO: Allow user to select size.
         party.save()
         is_new_party = True
@@ -65,4 +68,4 @@ def submit_order(request):
         relationship.add_ingredients.add(*list(add_ingredients))
         relationship.remove_ingredients.add(*list(remove_ingredients))
 
-    return JsonResponse({'success': True})
+    return JsonResponse({'success': True, "party": party.id})
